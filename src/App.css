@@ -190,6 +190,42 @@
   border: 1px solid var(--border-color);
 }
 
+.about-page-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  align-items: center;
+  gap: 28px;
+}
+
+.about-origin-copy { min-width: 0; }
+
+.about-origin-image {
+  position: relative;
+  height: 190px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+}
+
+.about-origin-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.about-origin-image figcaption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #ffffff;
+  font-size: 14px;
+}
+
 .about-page-intro h2,
 .about-responsibility-grid > h2,
 .about-role-workflow h2 {
@@ -207,11 +243,12 @@
 .about-role-table-wrap { overflow-x: auto; }
 
 @media (max-width: 700px) {
+  .about-page-intro { grid-template-columns: 1fr; }
   .about-responsibility-cards { grid-template-columns: 1fr; }
 }
 
 .role-dashboard-page {
-  padding-top: 24px;
+  padding-top: 20px;
 }
 
 .page-header {
@@ -219,7 +256,8 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 28px;
+  min-height: 88px;
+  margin-bottom: 24px;
 }
 
 .page-header h1 {
@@ -237,8 +275,8 @@
 .role-metric-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .role-metric-card {
@@ -272,7 +310,7 @@
 .role-dashboard-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
 .role-panel {
@@ -306,8 +344,8 @@
 .role-panel-body {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px 24px 24px;
+  gap: 14px;
+  padding: 18px 20px 20px;
 }
 
 .role-table-wrap {
@@ -449,6 +487,16 @@
   .role-metric-grid { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 600px) {
+  .sidebar-container { width: 200px; }
+  .sidebar-brand-subtitle { display: none; }
+  .sidebar-header { padding: 12px; }
+  .sidebar-nav { padding: 10px 8px; }
+  .role-list-row { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .role-action-group { width: 100%; justify-content: space-between; }
+  .about-intelligence-section { padding: 20px; }
+}
+
 .about-intelligence-heading h2 {
   margin: 4px 0 8px;
   color: var(--text-main);
@@ -516,12 +564,12 @@
 .recent-report-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
 .recent-report-card {
   min-width: 0;
-  padding: 20px;
+  padding: 18px;
   background: #ffffff;
   border: 1px solid var(--border-color);
   border-top: 4px solid var(--primary-accent);
@@ -642,6 +690,10 @@
   .recent-report-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (min-width: 1400px) {
+  .page-wrapper { max-width: 1480px; }
 }
 
 .sidebar-footer {
@@ -1626,10 +1678,10 @@
 
 .profile-header-card {
   position: relative;
-  margin-top: -60px;
-  padding: 0 32px 28px;
+  margin-top: 0;
+  padding: 28px 32px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
 }
@@ -1654,4 +1706,18 @@
   grid-template-columns: 2fr 1fr;
   gap: 24px;
   padding: 28px 32px;
+}
+
+@media (max-width: 700px) {
+  .profile-header-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px 20px;
+  }
+
+  .profile-grid-details {
+    display: block;
+    padding: 20px;
+  }
 }

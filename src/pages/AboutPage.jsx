@@ -41,11 +41,18 @@ export default function AboutPage() {
       </header>
 
       <section className="about-page-intro">
-        <h2>What this website does</h2>
-        <p>
-          GeoIntel brings CMPDI and Coal India operational information into a role-specific dashboard.
-          Each officer sees the work queue, evidence, risks, and approvals that match their responsibilities.
-        </p>
+        <div className="about-origin-copy">
+          <p className="page-kicker">From the field to the officer desk</p>
+          <h2>What this website does</h2>
+          <p>
+            GeoIntel brings CMPDI and Coal India operational information into a role-specific dashboard.
+            Each officer sees the work queue, evidence, risks, and approvals that match their responsibilities.
+          </p>
+        </div>
+        <figure className="about-origin-image">
+          <img src="/assets/mining_hero.jpg" alt="Mining operations viewed from above" />
+          <figcaption>Built around the work that begins in the field.</figcaption>
+        </figure>
       </section>
 
       <section className="about-responsibility-grid" aria-labelledby="responsibilities-title">
