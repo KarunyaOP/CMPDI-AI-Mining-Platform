@@ -47,233 +47,32 @@ export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload
 
   return (
     <div className="page-wrapper">
-      {/* Mining Themed Banner */}
-      <div 
-        className="page-hero-banner"
-        style={{
-          backgroundImage: 'url(/assets/mining_hero.jpg)',
-          padding: '24px 32px'
-        }}
-      >
-        <div className="banner-content">
-          <div className="banner-badge">
-            <Layers size={12} color="#93c5fd" />
-            <span>CMPDI Central Geological Data Repository</span>
-          </div>
-          <h1 className="banner-title" style={{ fontSize: '1.65rem' }}>
-            Reports & Geotechnical Analysis
-          </h1>
-          <p className="banner-subtitle">
-            Browse, search, and drill down into statutory geological reports, borehole logging surveys, and AI-synthesized risk audits across all Coal India subsidiaries.
-          </p>
-        </div>
+      <header className="page-header">
+        <div><p className="page-kicker">CMPDI central repository</p><h1>Reports &amp; Geotechnical Analysis</h1><p>Review statutory geological reports, borehole logs, and subsidiary risk audits.</p></div>
+        <button className="btn btn-primary" type="button" onClick={onOpenUpload}><UploadCloud size={17} /><span>Upload New Report</span></button>
+      </header>
 
-        <div className="banner-actions">
-          <button 
-            className="btn btn-primary"
-            onClick={onOpenUpload}
-          >
-            <UploadCloud size={16} />
-            <span>Upload New Report</span>
-          </button>
-        </div>
-      </div>
+      <section className="filter-bar" aria-label="Report filters">
+        <label className="report-search" htmlFor="search-reports-input"><Search size={18} /><span className="sr-only">Search reports</span><input id="search-reports-input" type="search" placeholder="Search by report name, coalfield, seam, or keyword" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} /></label>
+        <label className="filter-field"><span>Category</span><select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}><option value="ALL">All Categories</option>{categories.filter((category) => category !== 'ALL').map((category) => <option key={category} value={category}>{category}</option>)}</select></label>
+        <label className="filter-field"><span>Subsidiary</span><select value={selectedSubsidiaryFilter} onChange={(event) => setSelectedSubsidiaryFilter(event.target.value)}><option value="ALL">All Subsidiaries</option><option value="BCCL">BCCL</option><option value="ECL">ECL</option><option value="CCL">CCL</option><option value="SECL">SECL</option><option value="NCL">NCL</option></select></label>
+        <label className="filter-field"><span>Risk level</span><select value={selectedRiskFilter} onChange={(event) => setSelectedRiskFilter(event.target.value)}><option value="ALL">All Risk Levels</option><option value="High">High Risk</option><option value="Medium">Medium Risk</option><option value="Low">Low Risk</option></select></label>
+      </section>
 
-      {/* Filter and Search Bar */}
-      <div className="content-card" style={{ marginBottom: '20px' }}>
-        <div className="card-body" style={{ padding: '16px 20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '14px' }}>
-            {/* Search */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
-              padding: '8px 12px',
-              borderRadius: '8px'
-            }}>
-              <Search size={16} color="#64748b" />
-              <input 
-                type="text"
-                placeholder="Search by report name, coalfield, seam, or keyword..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ width: '100%', border: 'none', background: 'transparent', outline: 'none', fontSize: '0.85rem' }}
-                id="search-reports-input"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <div>
-              <select 
-                className="form-input" 
-                style={{ padding: '8px 12px', fontSize: '0.82rem' }}
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="ALL">All Categories</option>
-                {categories.filter(c => c !== 'ALL').map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Subsidiary Filter */}
-            <div>
-              <select 
-                className="form-input"
-                style={{ padding: '8px 12px', fontSize: '0.82rem' }}
-                value={selectedSubsidiaryFilter}
-                onChange={(e) => setSelectedSubsidiaryFilter(e.target.value)}
-              >
-                <option value="ALL">All Subsidiaries</option>
-                <option value="BCCL">BCCL (Dhanbad)</option>
-                <option value="ECL">ECL (Sanctoria)</option>
-                <option value="CCL">CCL (Ranchi)</option>
-                <option value="SECL">SECL (Bilaspur)</option>
-                <option value="NCL">NCL (Singrauli)</option>
-              </select>
-            </div>
-
-            {/* Risk Level Filter */}
-            <div>
-              <select 
-                className="form-input"
-                style={{ padding: '8px 12px', fontSize: '0.82rem' }}
-                value={selectedRiskFilter}
-                onChange={(e) => setSelectedRiskFilter(e.target.value)}
-              >
-                <option value="ALL">All Risk Levels</option>
-                <option value="High">🔴 High Risk Only</option>
-                <option value="Medium">🟡 Medium Risk Only</option>
-                <option value="Low">🟢 Low Risk Only</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Reports Table Card */}
-      <div className="content-card">
-        <div className="card-header">
-          <div className="card-title-group">
-            <FileSpreadsheet size={20} color="#2563eb" />
-            <div>
-              <h3 className="card-title">Geological Reports Library</h3>
-              <p className="card-subtitle">Showing {filteredReports.length} indexed documents with AI-ready strata models</p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Sort by:</span>
-            <span className="badge badge-slate" style={{ cursor: 'pointer' }}>Date (Newest First)</span>
-          </div>
-        </div>
-
+      <section className="content-card reports-library-card">
+        <header className="card-header"><div className="card-title-group"><FileSpreadsheet size={20} color="currentColor" /><div><h2 className="card-title">Geological Reports Library</h2><p className="card-subtitle">Showing {filteredReports.length} indexed documents</p></div></div><span className="reports-sort-label">Date: newest first</span></header>
         <div className="table-responsive">
-          <table className="gov-table">
-            <thead>
-              <tr>
-                <th>Report ID & Title</th>
-                <th>Subsidiary & Basin</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Risk Level</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'right' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredReports.map((report) => (
-                <tr key={report.id}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                      <div style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '6px',
-                        background: '#eff6ff',
-                        color: '#2563eb',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '2px'
-                      }}>
-                        <Layers size={16} />
-                      </div>
-                      <div>
-                        <div 
-                          style={{ fontWeight: 700, color: '#0f172a', cursor: 'pointer' }}
-                          onClick={() => onSelectReport(report)}
-                        >
-                          {report.title}
-                        </div>
-                        <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '2px' }}>
-                          ID: <strong style={{ color: '#2563eb' }}>{report.id}</strong> • File: {report.fileType} ({report.fileSize}) • Author: {report.author}
-                        </div>
-                        {/* Keyword tags */}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
-                          {report.keywords.slice(0, 3).map((kw, i) => (
-                            <span key={i} style={{ fontSize: '0.65rem', background: '#f1f5f9', padding: '1px 6px', borderRadius: '4px', color: '#475569' }}>
-                              #{kw}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div style={{ fontWeight: 600, color: '#0f172a' }}>{report.subsidiary}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{report.coalfield}</div>
-                  </td>
-                  <td>
-                    <span style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 500 }}>
-                      {report.category}
-                    </span>
-                  </td>
-                  <td>
-                    <span style={{ fontSize: '0.8rem', color: '#64748b', whiteSpace: 'nowrap' }}>
-                      {report.date}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`badge badge-${report.riskLevel.toLowerCase()}`}>
-                      {report.riskLevel} ({report.riskScore}/100)
-                    </span>
-                  </td>
-                  <td>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.74rem', color: '#059669', fontWeight: 600 }}>
-                      <CheckCircle2 size={13} color="#059669" />
-                      {report.status}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
-                      <button 
-                        className="btn btn-primary btn-sm"
-                        onClick={() => onSelectReport(report)}
-                        title="Open Detailed Stratigraphic & AI View"
-                      >
-                        <Eye size={13} />
-                        <span>Inspect</span>
-                      </button>
-                      <button 
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => onOpenMineGPT(report.title)}
-                        title="Query with MineGPT"
-                      >
-                        <Sparkles size={13} color="#d97706" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <table className="gov-table"><thead><tr><th>Report</th><th>Subsidiary</th><th>Category</th><th>Date</th><th>Risk</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+            {filteredReports.map((report) => <tr key={report.id}>
+              <td><div className="report-table-title"><span className="report-file-icon"><Layers size={18} /></span><span><button type="button" className="report-title-link" onClick={() => onSelectReport(report)}>{report.title}</button><small>{report.id} | {report.coalfield} | {report.fileType}</small></span></div></td>
+              <td>{report.subsidiary}</td><td>{report.category}</td><td>{report.date}</td>
+              <td><span className={`badge badge-${report.riskLevel.toLowerCase()}`}>{report.riskLevel} Risk ({report.riskScore}/100)</span></td>
+              <td><span className="report-status">{report.status}</span></td>
+              <td><div className="report-actions"><button className="btn btn-primary btn-sm" type="button" onClick={() => onSelectReport(report)}><Eye size={15} /><span>Inspect</span></button><button className="btn btn-secondary btn-sm" type="button" onClick={() => onOpenMineGPT(report.title)} aria-label={`Ask MineGPT about ${report.title}`}><Sparkles size={15} /></button></div></td>
+            </tr>)}
+          </tbody></table>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   X, 
   Download, 
@@ -13,20 +13,41 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 export default function ReportDetailModal({ report, isOpen, onClose, onOpenMineGPT }) {
   const [downloadToast, setDownloadToast] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab') return;
+
+      const dialog = document.querySelector('[role="dialog"]');
+      const focusable = dialog?.querySelectorAll('button, input, select, textarea, [href], [tabindex]:not([tabindex="-1"])');
+      if (!focusable?.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.querySelector('[role="dialog"] button, [role="dialog"] input')?.focus();
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !report) return null;
 
   const handleDownload = (format) => {
     setDownloadToast(true);
-    confetti({
-      particleCount: 40,
-      spread: 50,
-      origin: { y: 0.7 }
-    });
     setTimeout(() => {
       setDownloadToast(false);
     }, 3000);
@@ -40,7 +61,7 @@ export default function ReportDetailModal({ report, isOpen, onClose, onOpenMineG
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '900px', maxHeight: '92vh' }}>
+      <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby="report-modal-title" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '900px', maxHeight: '92vh' }}>
         {/* Header */}
         <div className="modal-header" style={{ background: '#0f172a', color: '#ffffff' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
@@ -64,7 +85,7 @@ export default function ReportDetailModal({ report, isOpen, onClose, onOpenMineG
                 </span>
                 {getRiskBadge(report.riskLevel)}
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.3 }}>
+              <h3 id="report-modal-title" style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.3 }}>
                 {report.title}
               </h3>
               <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '4px' }}>
@@ -75,6 +96,7 @@ export default function ReportDetailModal({ report, isOpen, onClose, onOpenMineG
           <button 
             style={{ background: 'rgba(255, 255, 255, 0.1)', border: 'none', borderRadius: '6px', padding: '6px', cursor: 'pointer', color: '#ffffff' }}
             onClick={onClose}
+            aria-label="Close report details dialog"
           >
             <X size={20} />
           </button>

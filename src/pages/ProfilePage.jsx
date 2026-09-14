@@ -48,14 +48,6 @@ export default function ProfilePage({ currentUser, setCurrentUser, onLogout }) {
     <div className="page-wrapper">
       {/* Profile Card Container */}
       <div className="content-card" style={{ overflow: 'hidden' }}>
-        {/* Mining Themed Cover Banner */}
-        <div 
-          className="profile-cover"
-          style={{
-            backgroundImage: 'url(/assets/mining_hero.jpg)'
-          }}
-        />
-
         {/* Profile Header Card */}
         <div className="profile-header-card">
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
