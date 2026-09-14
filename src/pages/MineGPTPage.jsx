@@ -63,7 +63,7 @@ How can I assist your geological analysis today?`,
     }
   }, [initialPrompt]);
 
-  const handleSendMessage = (queryText) => {
+  const handleSendMessage = async (queryText) => {
     const query = queryText || inputQuery;
     if (!query.trim()) return;
 
@@ -80,6 +80,35 @@ How can I assist your geological analysis today?`,
 
     if (!recentQueries.includes(query)) {
       setRecentQueries(prev => [query, ...prev.slice(0, 4)]);
+    }
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setIsTyping(false);
+        const botMsg = {
+          id: Date.now() + 1,
+          sender: 'gpt',
+          text: data.answer,
+          sources: data.sources.map(s => ({
+            id: s.id,
+            name: s.name,
+            pages: s.page || 'Indexed',
+            confidence: `${s.confidence}%`
+          })),
+          timestamp: 'Just now'
+        };
+        setMessages(prev => [...prev, botMsg]);
+        setActiveSources(botMsg.sources);
+        return;
+      }
+    } catch (e) {
+      console.warn("Backend chat API unavailable, using fallback knowledge base:", e);
     }
 
     const matchedKb = MINEGPT_KNOWLEDGE_BASE.find(kb => 
