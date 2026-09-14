@@ -1,26 +1,48 @@
 import React, { useState } from 'react';
-import { Eye, FileSpreadsheet, Layers, Search, Sparkles, UploadCloud } from 'lucide-react';
-import { GEOLOGICAL_REPORTS } from '../data/miningData';
+import { 
+  FileSpreadsheet, 
+  Search, 
+  Filter, 
+  UploadCloud, 
+  Download, 
+  Eye, 
+  Sparkles, 
+  CheckCircle2, 
+  ShieldAlert, 
+  Flame, 
+  Building2,
+  Calendar,
+  Layers
+} from 'lucide-react';
+import { SUBSIDIARIES } from '../data/miningData';
 
-const categories = [
-  'ALL',
-  'Slope Stability & Geotechnical',
-  'Borehole Lithology',
-  'Underground Geomechanics',
-  'Gas Reservoir & Ventilation',
-  'Environmental & Mine Planning'
-];
-
-export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGPT }) {
+export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload, onOpenMineGPT }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedSubsidiaryFilter, setSelectedSubsidiaryFilter] = useState('ALL');
   const [selectedRiskFilter, setSelectedRiskFilter] = useState('ALL');
 
-  const filteredReports = GEOLOGICAL_REPORTS.filter((report) => {
-    const query = searchTerm.toLowerCase();
-    const matchesSearch = report.title.toLowerCase().includes(query) || report.id.toLowerCase().includes(query) || report.coalfield.toLowerCase().includes(query) || report.keywords.some((keyword) => keyword.toLowerCase().includes(query));
-    return matchesSearch && (selectedCategory === 'ALL' || report.category === selectedCategory) && (selectedSubsidiaryFilter === 'ALL' || report.subsidiary === selectedSubsidiaryFilter) && (selectedRiskFilter === 'ALL' || report.riskLevel === selectedRiskFilter);
+  const categories = [
+    'ALL',
+    'Slope Stability & Geotechnical',
+    'Borehole Lithology',
+    'Underground Geomechanics',
+    'Gas Reservoir & Ventilation',
+    'Environmental & Mine Planning'
+  ];
+
+  const filteredReports = reports.filter((report) => {
+    const matchesSearch = 
+      report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.coalfield.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.keywords.some(k => k.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesCategory = selectedCategory === 'ALL' || report.category === selectedCategory;
+    const matchesSubsidiary = selectedSubsidiaryFilter === 'ALL' || report.subsidiary === selectedSubsidiaryFilter;
+    const matchesRisk = selectedRiskFilter === 'ALL' || report.riskLevel === selectedRiskFilter;
+
+    return matchesSearch && matchesCategory && matchesSubsidiary && matchesRisk;
   });
 
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   X, 
   UploadCloud, 
@@ -20,6 +20,7 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
   const [stage, setStage] = useState('idle'); // idle | processing | completed
   const [processingStatus, setProcessingStatus] = useState('');
   const [generatedSummary, setGeneratedSummary] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -167,11 +168,24 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
                     });
                   }
                 }}
-                onClick={() => {
-                  // Trigger sample
-                  handleStartProcessing(sampleDemoFiles[0]);
-                }}
+                onClick={() => fileInputRef.current?.click()}
               >
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  style={{ display: 'none' }} 
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      const f = e.target.files[0];
+                      handleStartProcessing({
+                        name: f.name,
+                        size: `${(f.size / (1024 * 1024)).toFixed(1)} MB`,
+                        category: 'Geological Analysis',
+                        subsidiary: 'BCCL'
+                      });
+                    }
+                  }}
+                />
                 <div className="upload-dropzone-icon">
                   <UploadCloud size={28} />
                 </div>

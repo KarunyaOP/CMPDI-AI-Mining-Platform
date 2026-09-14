@@ -1,0 +1,1 @@
+Create two different repos, one for frontend and second for backend. Use fastapi and python for backend. Write your code here.
