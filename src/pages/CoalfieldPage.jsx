@@ -25,9 +25,11 @@ import {
   Search,
   Filter
 } from 'lucide-react';
-import { COALFIELDS_DATA, GEOLOGICAL_REPORTS } from '../data/miningData';
+import { api } from '../services/api';
 
 export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
+  const [coalfields, setCoalfields] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCoalfieldId, setSelectedCoalfieldId] = useState('cf-jharia');
   const [selectedMineType, setSelectedMineType] = useState('ALL');
   const [selectedRiskFilter, setSelectedRiskFilter] = useState('ALL');
@@ -45,12 +47,22 @@ export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
     faultLines: true
   });
 
-  const [selectedObject, setSelectedObject] = useState(COALFIELDS_DATA[0].mines[0]); // default Joyrampur
+  const [selectedObject, setSelectedObject] = useState(null);
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersGroupRef = useRef(null);
 
-  const currentCoalfield = COALFIELDS_DATA.find(c => c.id === selectedCoalfieldId) || COALFIELDS_DATA[0];
+  useEffect(() => {
+    api.getCoalfields().then(data => {
+      setCoalfields(data);
+      if (data.length > 0) {
+        setSelectedObject(data[0].mines[0]);
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  const currentCoalfield = coalfields.find(c => c.id === selectedCoalfieldId) || coalfields[0];
 
   // Helper to trigger Leaflet resize
   const triggerMapResize = () => {

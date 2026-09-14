@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FileSpreadsheet, 
   Search, 
@@ -14,13 +14,29 @@ import {
   Calendar,
   Layers
 } from 'lucide-react';
-import { SUBSIDIARIES } from '../data/miningData';
+import { api } from '../services/api';
 
-export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload, onOpenMineGPT }) {
+export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGPT }) {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedSubsidiaryFilter, setSelectedSubsidiaryFilter] = useState('ALL');
   const [selectedRiskFilter, setSelectedRiskFilter] = useState('ALL');
+
+  useEffect(() => {
+    const params = {
+      ...(selectedCategory !== 'ALL' && { category: selectedCategory }),
+      ...(selectedSubsidiaryFilter !== 'ALL' && { subsidiary: selectedSubsidiaryFilter }),
+      ...(selectedRiskFilter !== 'ALL' && { risk_level: selectedRiskFilter }),
+      ...(searchTerm && { search: searchTerm })
+    };
+    
+    api.getReports(params).then(data => {
+      setReports(data);
+      setLoading(false);
+    });
+  }, [searchTerm, selectedCategory, selectedSubsidiaryFilter, selectedRiskFilter]);
 
   const categories = [
     'ALL',
@@ -30,20 +46,6 @@ export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload
     'Gas Reservoir & Ventilation',
     'Environmental & Mine Planning'
   ];
-
-  const filteredReports = reports.filter((report) => {
-    const matchesSearch = 
-      report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.coalfield.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.keywords.some(k => k.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    const matchesCategory = selectedCategory === 'ALL' || report.category === selectedCategory;
-    const matchesSubsidiary = selectedSubsidiaryFilter === 'ALL' || report.subsidiary === selectedSubsidiaryFilter;
-    const matchesRisk = selectedRiskFilter === 'ALL' || report.riskLevel === selectedRiskFilter;
-
-    return matchesSearch && matchesCategory && matchesSubsidiary && matchesRisk;
-  });
 
   return (
     <div className="page-wrapper">
@@ -161,7 +163,7 @@ export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload
             <FileSpreadsheet size={20} color="#2563eb" />
             <div>
               <h3 className="card-title">Geological Reports Library</h3>
-              <p className="card-subtitle">Showing {filteredReports.length} indexed documents with AI-ready strata models</p>
+              <p className="card-subtitle">Showing {reports.length} indexed documents with AI-ready strata models</p>
             </div>
           </div>
 
@@ -185,91 +187,97 @@ export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload
               </tr>
             </thead>
             <tbody>
-              {filteredReports.map((report) => (
-                <tr key={report.id}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                      <div style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '6px',
-                        background: '#eff6ff',
-                        color: '#2563eb',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '2px'
-                      }}>
-                        <Layers size={16} />
-                      </div>
-                      <div>
-                        <div 
-                          style={{ fontWeight: 700, color: '#0f172a', cursor: 'pointer' }}
-                          onClick={() => onSelectReport(report)}
-                        >
-                          {report.title}
-                        </div>
-                        <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '2px' }}>
-                          ID: <strong style={{ color: '#2563eb' }}>{report.id}</strong> • File: {report.fileType} ({report.fileSize}) • Author: {report.author}
-                        </div>
-                        {/* Keyword tags */}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
-                          {report.keywords.slice(0, 3).map((kw, i) => (
-                            <span key={i} style={{ fontSize: '0.65rem', background: '#f1f5f9', padding: '1px 6px', borderRadius: '4px', color: '#475569' }}>
-                              #{kw}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div style={{ fontWeight: 600, color: '#0f172a' }}>{report.subsidiary}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{report.coalfield}</div>
-                  </td>
-                  <td>
-                    <span style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 500 }}>
-                      {report.category}
-                    </span>
-                  </td>
-                  <td>
-                    <span style={{ fontSize: '0.8rem', color: '#64748b', whiteSpace: 'nowrap' }}>
-                      {report.date}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`badge badge-${report.riskLevel.toLowerCase()}`}>
-                      {report.riskLevel} ({report.riskScore}/100)
-                    </span>
-                  </td>
-                  <td>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.74rem', color: '#059669', fontWeight: 600 }}>
-                      <CheckCircle2 size={13} color="#059669" />
-                      {report.status}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
-                      <button 
-                        className="btn btn-primary btn-sm"
-                        onClick={() => onSelectReport(report)}
-                        title="Open Detailed Stratigraphic & AI View"
-                      >
-                        <Eye size={13} />
-                        <span>Inspect</span>
-                      </button>
-                      <button 
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => onOpenMineGPT(report.title)}
-                        title="Query with MineGPT"
-                      >
-                        <Sparkles size={13} color="#d97706" />
-                      </button>
-                    </div>
-                  </td>
+              {loading ? (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>Loading...</td>
                 </tr>
-              ))}
+              ) : (
+                reports.map((report) => (
+                  <tr key={report.id}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                        <div style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '6px',
+                          background: '#eff6ff',
+                          color: '#2563eb',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          marginTop: '2px'
+                        }}>
+                          <Layers size={16} />
+                        </div>
+                        <div>
+                          <div 
+                            style={{ fontWeight: 700, color: '#0f172a', cursor: 'pointer' }}
+                            onClick={() => onSelectReport(report)}
+                          >
+                            {report.title}
+                          </div>
+                          <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '2px' }}>
+                            ID: <strong style={{ color: '#2563eb' }}>{report.id}</strong> • File: {report.fileType} ({report.fileSize}) • Author: {report.author}
+                          </div>
+                          {/* Keyword tags */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
+                            {report.keywords.slice(0, 3).map((kw, i) => (
+                              <span key={i} style={{ fontSize: '0.65rem', background: '#f1f5f9', padding: '1px 6px', borderRadius: '4px', color: '#475569' }}>
+                                #{kw}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 600, color: '#0f172a' }}>{report.subsidiary}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{report.coalfield}</div>
+                    </td>
+                    <td>
+                      <span style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 500 }}>
+                        {report.category}
+                      </span>
+                    </td>
+                    <td>
+                      <span style={{ fontSize: '0.8rem', color: '#64748b', whiteSpace: 'nowrap' }}>
+                        {report.date}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge badge-${report.riskLevel.toLowerCase()}`}>
+                        {report.riskLevel} ({report.riskScore}/100)
+                      </span>
+                    </td>
+                    <td>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.74rem', color: '#059669', fontWeight: 600 }}>
+                        <CheckCircle2 size={13} color="#059669" />
+                        {report.status}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
+                        <button 
+                          className="btn btn-primary btn-sm"
+                          onClick={() => onSelectReport(report)}
+                          title="Open Detailed Stratigraphic & AI View"
+                        >
+                          <Eye size={13} />
+                          <span>Inspect</span>
+                        </button>
+                        <button 
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => onOpenMineGPT(report.title)}
+                          title="Query with MineGPT"
+                        >
+                          <Sparkles size={13} color="#d97706" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

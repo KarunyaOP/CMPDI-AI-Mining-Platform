@@ -1,427 +1,166 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Bot, 
   Send, 
-  Sparkles, 
+  FileText, 
   Database, 
-  ChevronRight, 
-  Clock, 
-  SlidersHorizontal,
-  PanelRightClose,
-  PanelRightOpen,
-  CheckCircle2,
-  X,
-  FileText
+  Sparkles, 
+  ArrowRight, 
+  Loader2,
+  AlertTriangle
 } from 'lucide-react';
-import { MINEGPT_KNOWLEDGE_BASE, GEOLOGICAL_REPORTS } from '../data/miningData';
+import { api } from '../services/api';
 
-export default function MineGPTPage({ initialPrompt, onSelectReport }) {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'gpt',
-      text: `Hello! I am **MineGPT**, the specialized AI Geological & Mining Assistant for CMPDI and Coal India Limited subsidiaries.
-
-I can assist your exploration and safety workflows with:
-- **Geotechnical & Borehole Report Summarization** (PDF, DOCX, LAS)
-- **Factor of Safety (FOS) Calculations** and highwall slope planar shear diagnosis
-- **Coal Seam Stratigraphy Coring**, GCV thermal values, and stripping ratios
-- **DGMS Statutory Audits** under S&T Circulars & Coal Mines Regulations 2017
-
-How can I assist your geological analysis today?`,
-      sources: [
-        { id: 'CMPDI-REPO', name: 'CMPDI Central Geotechnical Knowledge Base', pages: 'v3.4 Indexed', confidence: '99.4%' }
-      ],
-      timestamp: 'Just now'
-    }
-  ]);
-
-  const [inputQuery, setInputQuery] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [showSourcesPanel, setShowSourcesPanel] = useState(true);
-  const [activeSources, setActiveSources] = useState(messages[0].sources);
-  const [recentQueries, setRecentQueries] = useState([
-    'Joyrampur highwall slope stability',
-    'Chinakuri methane degasification',
-    'Gevra 70 MTPA seam thickness',
-    'BCCL stripping ratio comparisons'
-  ]);
-
-  const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+export default function MineGPTPage() {
+  const [query, setQuery] = useState('');
+  const [chatHistory, setChatHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [recentReports, setRecentReports] = useState([]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
+    api.getReports().then(reports => setRecentReports(reports.slice(0, 3)));
+  }, []);
 
-  useEffect(() => {
-    if (initialPrompt) {
-      handleSendMessage(initialPrompt);
-    }
-  }, [initialPrompt]);
-
-  const handleSendMessage = (queryText) => {
-    const query = queryText || inputQuery;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!query.trim()) return;
 
-    const userMsg = {
-      id: Date.now(),
-      sender: 'user',
-      text: query,
-      timestamp: 'Just now'
-    };
+    const userMessage = { role: 'user', content: query };
+    setChatHistory(prev => [...prev, userMessage]);
+    setQuery('');
+    setLoading(true);
 
-    setMessages(prev => [...prev, userMsg]);
-    setInputQuery('');
-    setIsTyping(true);
-
-    if (!recentQueries.includes(query)) {
-      setRecentQueries(prev => [query, ...prev.slice(0, 4)]);
-    }
-
-    const matchedKb = MINEGPT_KNOWLEDGE_BASE.find(kb => 
-      query.toLowerCase().includes(kb.query.toLowerCase()) ||
-      kb.query.toLowerCase().includes(query.toLowerCase())
-    ) || {
-      responseTitle: 'Geological Analysis Synthesis',
-      reply: `Based on the CMPDI Geological Knowledge Base for **${query}**:
-
-- **Lithological Assessment**: Exploration coring confirms stable Lower Gondwana sandstone sequences interbedded with carbonaceous shales.
-- **Seam Quality**: Gross Calorific Value (GCV) averages **6,600 kcal/kg** with average ash content under **19.5%**.
-- **Geotechnical Audit**: Strata convergence and acoustic emission monitoring are within normal baseline limits.
-- **DGMS Compliance**: No statutory violations detected in the active mining sector.`,
-      sources: [
-        { id: 'CMPDI-GENERAL', name: 'CMPDI Regional Technical Repository', pages: 'Section 3.2', confidence: '97.8%' }
-      ]
-    };
-
-    setTimeout(() => {
-      setIsTyping(false);
-      const botMsg = {
-        id: Date.now() + 1,
-        sender: 'gpt',
-        text: matchedKb.reply,
-        sources: matchedKb.sources,
-        timestamp: 'Just now'
+    try {
+      const response = await api.queryMineGPT(query);
+      const aiMessage = {
+        role: 'ai',
+        title: response.responseTitle,
+        content: response.reply,
+        sources: response.sources
       };
-      setMessages(prev => [...prev, botMsg]);
-      setActiveSources(matchedKb.sources);
-    }, 1100);
-  };
-
-  const suggestedQuestions = [
-    'Summarize the uploaded report',
-    'Show high-risk locations',
-    'Compare two reports',
-    'List recent geological findings'
-  ];
-
-  const renderMessageContent = (text) => {
-    if (text.includes('|')) {
-      const lines = text.split('\n');
-      return (
-        <div style={{ width: '100%' }}>
-          {lines.map((line, idx) => {
-            if (line.startsWith('### ')) {
-              return <h4 key={idx} style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '10px 0 6px' }}>{line.replace('### ', '')}</h4>;
-            }
-            if (line.startsWith('|')) {
-              const cells = line.split('|').filter((_, i, arr) => i > 0 && i < arr.length - 1);
-              const isHeader = lines[idx + 1]?.includes('---');
-              if (line.includes('---')) return null;
-              return (
-                <div key={idx} style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: `repeat(${cells.length}, 1fr)`, 
-                  gap: '10px', 
-                  padding: '7px 10px', 
-                  background: isHeader ? '#f1f5f9' : 'transparent', 
-                  fontWeight: isHeader ? 700 : 400, 
-                  borderBottom: '1px solid #e2e8f0', 
-                  fontSize: '0.8rem' 
-                }}>
-                  {cells.map((cell, cIdx) => (
-                    <span key={cIdx}>{cell.trim()}</span>
-                  ))}
-                </div>
-              );
-            }
-            return (
-              <p key={idx} style={{ marginBottom: '6px', fontSize: '0.86rem', lineHeight: 1.6 }} dangerouslySetInnerHTML={{
-                __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-              }} />
-            );
-          })}
-        </div>
-      );
+      setChatHistory(prev => [...prev, aiMessage]);
+    } catch (error) {
+      setChatHistory(prev => [...prev, { role: 'ai', content: 'Error querying geological knowledge base.' }]);
+    } finally {
+      setLoading(false);
     }
-
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {text.split('\n').map((line, idx) => (
-          <p key={idx} style={{ margin: 0, fontSize: '0.87rem', lineHeight: 1.65 }} dangerouslySetInnerHTML={{
-            __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          }} />
-        ))}
-      </div>
-    );
   };
 
   return (
-    <div className="page-wrapper" style={{ paddingBottom: '16px' }}>
-      {/* Sleek, Compact Header Banner */}
-      <div 
-        className="page-hero-banner"
-        style={{
-          backgroundImage: 'url(/assets/mining_hero.jpg)',
-          padding: '16px 24px',
-          marginBottom: '14px'
-        }}
-      >
-        <div className="banner-content">
-          <div className="banner-badge">
-            <Bot size={12} color="#93c5fd" />
-            <span>AI Geological Copilot</span>
+    <div className="page-wrapper" style={{ display: 'flex', gap: '24px', height: 'calc(100vh - 120px)' }}>
+      
+      {/* Chat Interface */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div className="content-card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div className="card-header" style={{ borderBottom: '1px solid #e2e8f0' }}>
+            <div className="card-title-group">
+              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'linear-gradient(135deg, #2563eb, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Bot size={20} color="#fff" />
+              </div>
+              <div>
+                <h3 className="card-title">MineGPT AI Assistant</h3>
+                <p className="card-subtitle">CMPDI Central Geological Knowledge Engine</p>
+              </div>
+            </div>
           </div>
-          <h1 className="banner-title" style={{ fontSize: '1.4rem', marginBottom: '2px' }}>
-            MineGPT: Mining & Geological Intelligence
-          </h1>
-          <p className="banner-subtitle" style={{ fontSize: '0.82rem' }}>
-            Natural language Q&A across borehole assays, slope stability radar streams, and CIL statutory reports.
-          </p>
-        </div>
 
-        <div className="banner-actions">
-          <button 
-            className="btn btn-outline-light btn-sm"
-            onClick={() => setShowSourcesPanel(!showSourcesPanel)}
-          >
-            {showSourcesPanel ? <PanelRightClose size={14} /> : <PanelRightOpen size={14} />}
-            <span>{showSourcesPanel ? 'Hide Sources Panel' : 'Show Sources'}</span>
-          </button>
-        </div>
-      </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', background: '#f8fafc' }}>
+            {chatHistory.length === 0 && (
+              <div style={{ margin: 'auto', textAlign: 'center', maxWidth: '400px' }}>
+                <Bot size={48} color="#2563eb" style={{ margin: '0 auto 16px' }} />
+                <h3 style={{ fontWeight: 700, marginBottom: '8px' }}>Welcome to MineGPT</h3>
+                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                  Ask questions about coal seam stratigraphy, slope stability, or statutory DGMS guidelines.
+                </p>
+              </div>
+            )}
 
-      {/* Dynamic Layout: Chat Card + Collapsible Sources Panel */}
-      <div style={{
-        display: 'flex',
-        gap: '14px',
-        height: 'calc(100vh - 190px)',
-        minHeight: '560px'
-      }}>
-        {/* Chat Main Card */}
-        <div style={{
-          flex: 1,
-          background: '#ffffff',
-          border: '1px solid #e2e8f0',
-          borderRadius: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          boxShadow: 'var(--shadow-sm)'
-        }}>
-          {/* Scrollable Messages Area */}
-          <div className="chat-messages-scroll" style={{ padding: '20px 24px', gap: '16px' }}>
-            {messages.map((msg) => (
-              <div key={msg.id} className={`chat-bubble ${msg.sender}`} style={{ maxWidth: msg.sender === 'gpt' ? '92%' : '80%' }}>
-                <div className={`chat-avatar ${msg.sender}`} style={{ width: '34px', height: '34px', fontSize: '0.78rem' }}>
-                  {msg.sender === 'gpt' ? <Bot size={18} /> : 'ME'}
-                </div>
-                <div className="chat-bubble-body" style={{ padding: '14px 18px' }}>
-                  {renderMessageContent(msg.text)}
-
-                  {msg.sources && msg.sources.length > 0 && (
-                    <div style={{
-                      marginTop: '10px',
-                      paddingTop: '8px',
-                      borderTop: '1px solid #e2e8f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '0.72rem',
-                      color: '#64748b'
-                    }}>
-                      <Database size={12} color="#2563eb" />
-                      <span>Cited Sources: <strong>{msg.sources.map(s => s.name).join(', ')}</strong></span>
+            {chatHistory.map((msg, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '12px', alignItems: 'flex-start' }}>
+                {msg.role === 'ai' && (
+                  <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Bot size={16} color="#fff" />
+                  </div>
+                )}
+                <div style={{ maxWidth: '70%', background: msg.role === 'user' ? '#2563eb' : '#fff', color: msg.role === 'user' ? '#fff' : '#0f172a', padding: '12px 16px', borderRadius: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                  {msg.title && (
+                    <div style={{ fontWeight: 700, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Sparkles size={14} color="#d97706" /> {msg.title}
+                    </div>
+                  )}
+                  <div style={{ fontSize: '0.9rem', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+                  
+                  {msg.sources && (
+                    <div style={{ marginTop: '12px', borderTop: '1px solid #e2e8f0', paddingTop: '8px', fontSize: '0.72rem', color: '#64748b' }}>
+                      <strong>Sources:</strong>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '4px' }}>
+                        {msg.sources.map((src, j) => (
+                          <span key={j} style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
+                            {src.name}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
             ))}
 
-            {isTyping && (
-              <div className="chat-bubble gpt">
-                <div className="chat-avatar gpt" style={{ width: '34px', height: '34px' }}>
-                  <Bot size={18} />
+            {loading && (
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Loader2 size={16} color="#fff" className="animate-spin" />
                 </div>
-                <div className="chat-bubble-body" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 16px' }}>
-                  <Sparkles size={15} color="#f59e0b" style={{ animation: 'spin 2s linear infinite' }} />
-                  <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                    MineGPT is synthesizing geological analysis and checking DGMS standards...
-                  </span>
+                <div style={{ background: '#fff', padding: '12px 16px', borderRadius: '12px', color: '#64748b', fontStyle: 'italic' }}>
+                  Analyzing geological corpus...
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
-          {/* Clean Prompt Chips */}
-          <div className="prompt-chips-tray" style={{ padding: '8px 18px', gap: '6px' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b', whiteSpace: 'nowrap' }}>
-              Suggested:
-            </span>
-            {suggestedQuestions.map((sq, idx) => (
-              <button
-                key={idx}
-                className="prompt-chip"
-                onClick={() => handleSendMessage(sq)}
-                style={{ padding: '5px 12px', fontSize: '0.75rem' }}
-              >
-                {sq}
+          <div style={{ padding: '16px 20px', borderTop: '1px solid #e2e8f0', background: '#fff' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Ask MineGPT..."
+                style={{ flex: 1, padding: '10px 16px', borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                disabled={loading}
+              />
+              <button type="submit" className="btn btn-primary" disabled={loading || !query.trim()}>
+                <Send size={16} />
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Sidebar: Suggested Queries & Recent Reports */}
+      <div style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="content-card" style={{ padding: '16px' }}>
+          <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '12px', color: '#0f172a' }}>Suggested Queries</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {['Summarize the uploaded report', 'Show high-risk locations'].map((q, i) => (
+              <button key={i} className="btn btn-outline btn-sm" style={{ justifyContent: 'flex-start', textAlign: 'left' }} onClick={() => { setQuery(q); }}>
+                {q}
               </button>
             ))}
           </div>
-
-          {/* Chat Input Bar */}
-          <form 
-            className="chat-input-bar"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendMessage();
-            }}
-            style={{ padding: '12px 18px' }}
-          >
-            <input 
-              type="text"
-              className="chat-input-field"
-              placeholder="Ask anything about coal seams, slope stability, borehole coring, or DGMS safety..."
-              value={inputQuery}
-              onChange={(e) => setInputQuery(e.target.value)}
-              id="minegpt-input-field"
-              style={{ padding: '9px 14px', fontSize: '0.85rem' }}
-            />
-            <button 
-              type="submit" 
-              className="btn btn-primary"
-              disabled={isTyping || !inputQuery.trim()}
-              id="btn-minegpt-send"
-              style={{ padding: '9px 16px', fontSize: '0.85rem' }}
-            >
-              <Send size={15} />
-              <span>Ask AI</span>
-            </button>
-          </form>
         </div>
 
-        {/* Collapsible Right Panel: Sources & Recent Queries */}
-        {showSourcesPanel && (
-          <div style={{
-            width: '290px',
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '12px',
-            padding: '16px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '14px',
-            boxShadow: 'var(--shadow-sm)',
-            flexShrink: 0,
-            animation: 'fadeIn 0.2s ease-out'
-          }}>
-            {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '0.88rem', color: '#0f172a' }}>
-                <Database size={16} color="#2563eb" />
-                <span>Sources & Citations</span>
+        <div className="content-card" style={{ padding: '16px' }}>
+          <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '12px', color: '#0f172a' }}>Recent Reports</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {recentReports.map(r => (
+              <div key={r.id} style={{ fontSize: '0.78rem', color: '#475569', padding: '8px', background: '#f8fafc', borderRadius: '6px', cursor: 'pointer' }} onClick={() => { setQuery(`Summarize ${r.title}`); }}>
+                {r.title.substring(0, 40)}...
               </div>
-              <button 
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}
-                onClick={() => setShowSourcesPanel(false)}
-              >
-                <X size={15} />
-              </button>
-            </div>
-
-            {/* Citations List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {activeSources && activeSources.map((source, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    background: '#f8fafc',
-                    border: '1px solid #e2e8f0',
-                    fontSize: '0.78rem'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
-                    <span style={{ fontWeight: 700, color: '#0f172a' }}>{source.id}</span>
-                    <span className="badge badge-low" style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
-                      {source.confidence} Match
-                    </span>
-                  </div>
-                  <div style={{ color: '#475569', fontSize: '0.72rem', marginBottom: '3px' }}>
-                    {source.name}
-                  </div>
-                  <div style={{ fontSize: '0.68rem', color: '#64748b' }}>
-                    Section: <strong>{source.pages}</strong>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Recent Queries */}
-            <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px', fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>
-                <Clock size={14} color="#64748b" />
-                <span>Recent Queries</span>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                {recentQueries.map((rq, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      padding: '6px 10px',
-                      borderRadius: '6px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      fontSize: '0.72rem',
-                      color: '#475569',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                    onClick={() => handleSendMessage(rq)}
-                  >
-                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{rq}</span>
-                    <ChevronRight size={12} color="#94a3b8" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Grounding Mode Note */}
-            <div style={{
-              marginTop: 'auto',
-              background: '#f0f9ff',
-              border: '1px solid #bae6fd',
-              borderRadius: '8px',
-              padding: '10px 12px',
-              fontSize: '0.72rem'
-            }}>
-              <div style={{ fontWeight: 700, color: '#0369a1', marginBottom: '2px' }}>CMPDI Grounded Corpus</div>
-              <div style={{ color: '#0c4a6e', lineHeight: 1.4 }}>Responses are directly verified against borehole core logs and DGMS safety guidelines.</div>
-            </div>
+            ))}
           </div>
-        )}
+        </div>
       </div>
+
     </div>
   );
 }
