@@ -14,9 +14,9 @@ import {
   Calendar,
   Layers
 } from 'lucide-react';
-import { GEOLOGICAL_REPORTS, SUBSIDIARIES } from '../data/miningData';
+import { SUBSIDIARIES } from '../data/miningData';
 
-export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGPT }) {
+export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload, onOpenMineGPT }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedSubsidiaryFilter, setSelectedSubsidiaryFilter] = useState('ALL');
@@ -31,7 +31,7 @@ export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGP
     'Environmental & Mine Planning'
   ];
 
-  const filteredReports = GEOLOGICAL_REPORTS.filter((report) => {
+  const filteredReports = reports.filter((report) => {
     const matchesSearch = 
       report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       report.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
