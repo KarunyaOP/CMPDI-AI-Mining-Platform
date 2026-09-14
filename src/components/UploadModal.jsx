@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   X, 
   UploadCloud, 
@@ -12,7 +12,6 @@ import {
   Layers,
   FileSpreadsheet
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenMineGPT }) {
   const [dragActive, setDragActive] = useState(false);
@@ -21,6 +20,33 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
   const [stage, setStage] = useState('idle'); // idle | processing | completed
   const [processingStatus, setProcessingStatus] = useState('');
   const [generatedSummary, setGeneratedSummary] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab') return;
+
+      const dialog = document.querySelector('[role="dialog"]');
+      const focusable = dialog?.querySelectorAll('button, input, select, textarea, [href], [tabindex]:not([tabindex="-1"])');
+      if (!focusable?.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.querySelector('[role="dialog"] button, [role="dialog"] input')?.focus();
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -65,11 +91,6 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
         riskLevel: 'High',
         summary: 'AI Extraction Complete: South-West highwall bench exhibits planar shear risk along carbonaceous shale interface. Immediate 8-hole sub-horizontal dewatering and bench flattening to 38° recommended under DGMS S&T guidelines.'
       });
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
     }, 3400);
   };
 
@@ -89,7 +110,7 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '680px' }}>
+      <div className="modal-card" role="dialog" aria-modal="true" aria-labelledby="upload-modal-title" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '680px' }}>
         {/* Modal Header */}
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -106,7 +127,7 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
               <UploadCloud size={20} />
             </div>
             <div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>
+              <h3 id="upload-modal-title" style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>
                 Upload Mining & Geological Report
               </h3>
               <p style={{ fontSize: '0.78rem', color: '#64748b' }}>
@@ -117,6 +138,7 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
           <button 
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}
             onClick={onClose}
+            aria-label="Close upload report dialog"
           >
             <X size={20} />
           </button>
@@ -127,7 +149,8 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
           {stage === 'idle' && (
             <div>
               {/* Drag Drop Area */}
-              <div 
+              <button 
+                type="button"
                 className="upload-dropzone"
                 onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
                 onDragLeave={() => setDragActive(false)}
@@ -167,7 +190,7 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
                   <span className="format-chip">📊 XLSX</span>
                   <span className="format-chip">⛏️ LAS Logs</span>
                 </div>
-              </div>
+              </button>
 
               {/* Instant One-Click Sample Geological Reports */}
               <div style={{ marginTop: '20px' }}>
@@ -176,7 +199,8 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {sampleDemoFiles.map((file, idx) => (
-                    <div
+                    <button
+                      type="button"
                       key={idx}
                       style={{
                         display: 'flex',
@@ -190,6 +214,7 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
                         transition: 'all 0.2s'
                       }}
                       onClick={() => handleStartProcessing(file)}
+                      aria-label={`Run AI analysis for ${file.name}`}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <FileText size={18} color="#2563eb" />
@@ -198,10 +223,10 @@ export default function UploadModal({ isOpen, onClose, onUploadComplete, onOpenM
                           <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{file.subsidiary} • {file.category} • {file.size}</div>
                         </div>
                       </div>
-                      <span className="btn btn-secondary btn-sm" style={{ fontSize: '0.72rem' }}>
+                      <span className="btn btn-secondary btn-sm" style={{ fontSize: '0.875rem' }}>
                         Run AI Analysis
                       </span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>

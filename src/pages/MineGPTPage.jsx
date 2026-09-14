@@ -172,37 +172,16 @@ How can I assist your geological analysis today?`,
 
   return (
     <div className="page-wrapper" style={{ paddingBottom: '16px' }}>
-      {/* Sleek, Compact Header Banner */}
-      <div 
-        className="page-hero-banner"
-        style={{
-          backgroundImage: 'url(/assets/mining_hero.jpg)',
-          padding: '16px 24px',
-          marginBottom: '14px'
-        }}
-      >
-        <div className="banner-content">
-          <div className="banner-badge">
-            <Bot size={12} color="#93c5fd" />
-            <span>AI Geological Copilot</span>
-          </div>
-          <h1 className="banner-title" style={{ fontSize: '1.4rem', marginBottom: '2px' }}>
-            MineGPT: Mining & Geological Intelligence
-          </h1>
-          <p className="banner-subtitle" style={{ fontSize: '0.82rem' }}>
-            Natural language Q&A across borehole assays, slope stability radar streams, and CIL statutory reports.
-          </p>
+      <div className="page-header">
+        <div>
+          <p className="page-kicker">CMPDI language assistant</p>
+          <h1>MineGPT: Mining &amp; Geological Intelligence</h1>
+          <p>Ask questions about borehole assays, slope stability, and statutory reports.</p>
         </div>
-
-        <div className="banner-actions">
-          <button 
-            className="btn btn-outline-light btn-sm"
-            onClick={() => setShowSourcesPanel(!showSourcesPanel)}
-          >
-            {showSourcesPanel ? <PanelRightClose size={14} /> : <PanelRightOpen size={14} />}
-            <span>{showSourcesPanel ? 'Hide Sources Panel' : 'Show Sources'}</span>
-          </button>
-        </div>
+        <button className="btn btn-secondary" type="button" onClick={() => setShowSourcesPanel(!showSourcesPanel)}>
+          {showSourcesPanel ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+          <span>{showSourcesPanel ? 'Hide Sources' : 'Show Sources'}</span>
+        </button>
       </div>
 
       {/* Dynamic Layout: Chat Card + Collapsible Sources Panel */}
