@@ -1,10 +1,15 @@
-node_modules/
-dist/
-.opencode/
-.specify/
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Backend
 backend/.venv/
 backend/venv/
 **/__pycache__/
 backend/uploads/
 backend/data/
+
+# Tool configs
+.opencode/
+.specify/
 opencode.json

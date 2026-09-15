@@ -54,10 +54,6 @@ export default function MineGPTPage() {
           <h1>MineGPT: Mining &amp; Geological Intelligence</h1>
           <p>Ask questions about borehole assays, slope stability, and statutory reports.</p>
         </div>
-        <button className="btn btn-secondary" type="button" onClick={() => setShowSourcesPanel(!showSourcesPanel)}>
-          {showSourcesPanel ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-          <span>{showSourcesPanel ? 'Hide Sources' : 'Show Sources'}</span>
-        </button>
       </div>
 
       {/* Dynamic Layout: Chat Card + Collapsible Sources Panel */}
@@ -79,14 +75,14 @@ export default function MineGPTPage() {
           boxShadow: 'var(--shadow-sm)'
         }}>
           {/* Scrollable Messages Area */}
-          <div className="chat-messages-scroll" style={{ padding: '20px 24px', gap: '16px' }}>
-            {messages.map((msg) => (
-              <div key={msg.id} className={`chat-bubble ${msg.sender}`} style={{ maxWidth: msg.sender === 'gpt' ? '92%' : '80%' }}>
-                <div className={`chat-avatar ${msg.sender}`} style={{ width: '34px', height: '34px', fontSize: '0.78rem' }}>
-                  {msg.sender === 'gpt' ? <Bot size={18} /> : 'ME'}
-                </div>
-                <div className="chat-bubble-body" style={{ padding: '14px 18px' }}>
-                  {renderMessageContent(msg.text)}
+          <div className="chat-messages-scroll" style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, overflowY: 'auto' }}>
+            {chatHistory.length === 0 && (
+              <div style={{ textAlign: 'center', color: '#64748b', margin: 'auto' }}>
+                <Bot size={48} style={{ opacity: 0.3, marginBottom: '12px' }} />
+                <h3>Welcome to MineGPT</h3>
+                <p style={{ fontSize: '0.9rem' }}>Ask questions about geological reports, coal reserves, and mining operations.</p>
+              </div>
+            )}
 
             {chatHistory.map((msg, i) => (
               <div key={i} style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '12px', alignItems: 'flex-start' }}>
@@ -103,7 +99,7 @@ export default function MineGPTPage() {
                   )}
                   <div style={{ fontSize: '0.9rem', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{msg.content}</div>
                   
-                  {msg.sources && (
+                  {msg.sources && msg.sources.length > 0 && (
                     <div style={{ marginTop: '12px', borderTop: '1px solid #e2e8f0', paddingTop: '8px', fontSize: '0.72rem', color: '#64748b' }}>
                       <strong>Sources:</strong>
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '4px' }}>
@@ -147,31 +143,32 @@ export default function MineGPTPage() {
             </form>
           </div>
         </div>
-      </div>
 
-      {/* Sidebar: Suggested Queries & Recent Reports */}
-      <div style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div className="content-card" style={{ padding: '16px' }}>
-          <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '12px', color: '#0f172a' }}>Suggested Queries</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {['Summarize the uploaded report', 'Show high-risk locations'].map((q, i) => (
-              <button key={i} className="btn btn-outline btn-sm" style={{ justifyContent: 'flex-start', textAlign: 'left' }} onClick={() => { setQuery(q); }}>
-                {q}
-              </button>
-            ))}
+        {/* Sidebar: Suggested Queries & Recent Reports */}
+        <div style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="content-card" style={{ padding: '16px' }}>
+            <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '12px', color: '#0f172a' }}>Suggested Queries</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {['Summarize the uploaded report', 'Show high-risk locations'].map((q, i) => (
+                <button key={i} className="btn btn-outline btn-sm" style={{ justifyContent: 'flex-start', textAlign: 'left' }} onClick={() => { setQuery(q); }}>
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="content-card" style={{ padding: '16px' }}>
+            <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '12px', color: '#0f172a' }}>Recent Reports</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {recentReports.map(r => (
+                <div key={r.id} style={{ fontSize: '0.78rem', color: '#475569', padding: '8px', background: '#f8fafc', borderRadius: '6px', cursor: 'pointer' }} onClick={() => { setQuery(`Summarize ${r.title}`); }}>
+                  {r.title.substring(0, 40)}...
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="content-card" style={{ padding: '16px' }}>
-          <h4 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '12px', color: '#0f172a' }}>Recent Reports</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {recentReports.map(r => (
-              <div key={r.id} style={{ fontSize: '0.78rem', color: '#475569', padding: '8px', background: '#f8fafc', borderRadius: '6px', cursor: 'pointer' }} onClick={() => { setQuery(`Summarize ${r.title}`); }}>
-                {r.title.substring(0, 40)}...
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
     </div>

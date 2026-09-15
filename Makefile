@@ -6,7 +6,7 @@ help:
 	@echo "========================================================"
 	@echo " make install         - Install backend & frontend dependencies"
 	@echo " make install-backend - Install Python backend dependencies"
-	@echo " make install-frontend- Install Node frontend dependencies"
+	@echo " make install-frontend - Install Node frontend dependencies"
 	@echo " make run-backend     - Run FastAPI backend (port 8000)"
 	@echo " make run-frontend    - Run Vite frontend dev server"
 	@echo " make test            - Run backend pytest tests"
@@ -21,7 +21,7 @@ install-backend:
 
 install-frontend:
 	@echo "Installing frontend dependencies..."
-	npm install
+	cd frontend && npm install
 
 run-backend:
 	@echo "Starting FastAPI backend server on http://localhost:8000..."
@@ -29,7 +29,7 @@ run-backend:
 
 run-frontend:
 	@echo "Starting Vite frontend dev server..."
-	npm run dev
+	cd frontend && npm run dev
 
 test:
 	@echo "Running backend test suite..."
@@ -39,4 +39,4 @@ clean:
 	@echo "Cleaning cache and build files..."
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
-	rm -rf .pytest_cache backend/.pytest_cache dist
+	rm -rf .pytest_cache backend/.pytest_cache frontend/dist

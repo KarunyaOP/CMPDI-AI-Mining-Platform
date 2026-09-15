@@ -6,7 +6,7 @@ Professional geological intelligence, mining monitoring, and statutory reporting
 
 ## 🏗️ Monorepo Structure
 
-- **`src/`** & root: React 18 + Vite frontend application (Dashboard, GIS Coalfield Map, MineGPT Assistant, Reports, Uploads).
+- **`frontend/`**: React 18 + Vite frontend application (Dashboard, GIS Coalfield Map, MineGPT Assistant, Reports, Uploads).
 - **`backend/`**: FastAPI Python backend application (RESTful endpoints, authentication, telemetry, AI report generation, and in-memory repository mirroring frontend data structures).
 
 ---
@@ -91,6 +91,7 @@ pip install -r requirements.txt
 
 ### 2. Node.js Frontend Setup
 ```bash
+cd frontend
 npm install
 ```
 
