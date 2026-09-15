@@ -251,45 +251,17 @@ export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
 
   return (
     <div className="page-wrapper" style={{ paddingBottom: '16px' }}>
-      {/* Compact Top Bar */}
       {!isFullMapMode && (
-        <div 
-          className="page-hero-banner"
-          style={{
-            backgroundImage: 'url(/assets/mining_hero.jpg)',
-            padding: '16px 24px',
-            marginBottom: '14px'
-          }}
-        >
-          <div className="banner-content">
-            <div className="banner-badge">
-              <Compass size={12} color="#93c5fd" />
-              <span>GIS Spatial Telemetry & Hazard Zoning Engine</span>
-            </div>
-            <h1 className="banner-title" style={{ fontSize: '1.4rem', marginBottom: '2px' }}>
-              Coalfield Intelligence & GIS Mapping
-            </h1>
-            <p className="banner-subtitle" style={{ fontSize: '0.82rem' }}>
-              Inspect live mine pits, highwall slope radar telemetry, cored borehole stratigraphy, and hazard zoning.
-            </p>
+        <div className="page-header">
+          <div>
+            <p className="page-kicker">GIS spatial telemetry</p>
+            <h1>Coalfield Intelligence &amp; GIS Mapping</h1>
+            <p>Inspect mine pits, borehole records, radar telemetry, and hazard zones.</p>
           </div>
-
-          <div className="banner-actions">
-            <button 
-              className="btn btn-outline-light btn-sm"
-              onClick={() => onOpenMineGPT('Show high-risk locations')}
-            >
-              <ShieldAlert size={14} color="#fca5a5" />
-              <span>Risk Diagnostics</span>
-            </button>
-            <button 
-              className="btn btn-primary btn-sm"
-              onClick={() => setIsFullMapMode(true)}
-            >
-              <Maximize2 size={14} />
-              <span>Full Screen Map</span>
-            </button>
-          </div>
+          <button className="btn btn-primary" type="button" onClick={() => setIsFullMapMode(true)}>
+            <Maximize2 size={16} />
+            <span>Full Screen Map</span>
+          </button>
         </div>
       )}
 
@@ -393,22 +365,22 @@ export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
                 Map Layers
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div className="layer-toggle-row" onClick={() => toggleLayer('mines')}>
+                <label className="layer-toggle-row">
                   <span>⛏️ Active Mines ({currentCoalfield.mines.length})</span>
-                  <input type="checkbox" checked={activeLayers.mines} onChange={() => {}} />
-                </div>
-                <div className="layer-toggle-row" onClick={() => toggleLayer('boreholes')}>
+                  <input type="checkbox" checked={activeLayers.mines} onChange={() => toggleLayer('mines')} />
+                </label>
+                <label className="layer-toggle-row">
                   <span>📍 Borehole Coring Logs</span>
-                  <input type="checkbox" checked={activeLayers.boreholes} onChange={() => {}} />
-                </div>
-                <div className="layer-toggle-row" onClick={() => toggleLayer('radarAlerts')}>
+                  <input type="checkbox" checked={activeLayers.boreholes} onChange={() => toggleLayer('boreholes')} />
+                </label>
+                <label className="layer-toggle-row">
                   <span>⚠️ Radar Hazard Rings</span>
-                  <input type="checkbox" checked={activeLayers.radarAlerts} onChange={() => {}} />
-                </div>
-                <div className="layer-toggle-row" onClick={() => toggleLayer('faultLines')}>
+                  <input type="checkbox" checked={activeLayers.radarAlerts} onChange={() => toggleLayer('radarAlerts')} />
+                </label>
+                <label className="layer-toggle-row">
                   <span>⚡ Fault Line Traces</span>
-                  <input type="checkbox" checked={activeLayers.faultLines} onChange={() => {}} />
-                </div>
+                  <input type="checkbox" checked={activeLayers.faultLines} onChange={() => toggleLayer('faultLines')} />
+                </label>
               </div>
             </div>
 

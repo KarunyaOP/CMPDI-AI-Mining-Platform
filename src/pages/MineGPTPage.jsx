@@ -47,33 +47,46 @@ export default function MineGPTPage() {
   };
 
   return (
-    <div className="page-wrapper" style={{ display: 'flex', gap: '24px', height: 'calc(100vh - 120px)' }}>
-      
-      {/* Chat Interface */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div className="content-card" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div className="card-header" style={{ borderBottom: '1px solid #e2e8f0' }}>
-            <div className="card-title-group">
-              <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'linear-gradient(135deg, #2563eb, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bot size={20} color="#fff" />
-              </div>
-              <div>
-                <h3 className="card-title">MineGPT AI Assistant</h3>
-                <p className="card-subtitle">CMPDI Central Geological Knowledge Engine</p>
-              </div>
-            </div>
-          </div>
+    <div className="page-wrapper" style={{ paddingBottom: '16px' }}>
+      <div className="page-header">
+        <div>
+          <p className="page-kicker">CMPDI language assistant</p>
+          <h1>MineGPT: Mining &amp; Geological Intelligence</h1>
+          <p>Ask questions about borehole assays, slope stability, and statutory reports.</p>
+        </div>
+        <button className="btn btn-secondary" type="button" onClick={() => setShowSourcesPanel(!showSourcesPanel)}>
+          {showSourcesPanel ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+          <span>{showSourcesPanel ? 'Hide Sources' : 'Show Sources'}</span>
+        </button>
+      </div>
 
-          <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', background: '#f8fafc' }}>
-            {chatHistory.length === 0 && (
-              <div style={{ margin: 'auto', textAlign: 'center', maxWidth: '400px' }}>
-                <Bot size={48} color="#2563eb" style={{ margin: '0 auto 16px' }} />
-                <h3 style={{ fontWeight: 700, marginBottom: '8px' }}>Welcome to MineGPT</h3>
-                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
-                  Ask questions about coal seam stratigraphy, slope stability, or statutory DGMS guidelines.
-                </p>
-              </div>
-            )}
+      {/* Dynamic Layout: Chat Card + Collapsible Sources Panel */}
+      <div style={{
+        display: 'flex',
+        gap: '14px',
+        height: 'calc(100vh - 190px)',
+        minHeight: '560px'
+      }}>
+        {/* Chat Main Card */}
+        <div style={{
+          flex: 1,
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
+          borderRadius: '12px',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          {/* Scrollable Messages Area */}
+          <div className="chat-messages-scroll" style={{ padding: '20px 24px', gap: '16px' }}>
+            {messages.map((msg) => (
+              <div key={msg.id} className={`chat-bubble ${msg.sender}`} style={{ maxWidth: msg.sender === 'gpt' ? '92%' : '80%' }}>
+                <div className={`chat-avatar ${msg.sender}`} style={{ width: '34px', height: '34px', fontSize: '0.78rem' }}>
+                  {msg.sender === 'gpt' ? <Bot size={18} /> : 'ME'}
+                </div>
+                <div className="chat-bubble-body" style={{ padding: '14px 18px' }}>
+                  {renderMessageContent(msg.text)}
 
             {chatHistory.map((msg, i) => (
               <div key={i} style={{ display: 'flex', flexDirection: msg.role === 'user' ? 'row-reverse' : 'row', gap: '12px', alignItems: 'flex-start' }}>
