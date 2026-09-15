@@ -38,6 +38,8 @@ export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGP
     });
   }, [searchTerm, selectedCategory, selectedSubsidiaryFilter, selectedRiskFilter]);
 
+  const filteredReports = reports;
+
   const categories = [
     'ALL',
     'Slope Stability & Geotechnical',

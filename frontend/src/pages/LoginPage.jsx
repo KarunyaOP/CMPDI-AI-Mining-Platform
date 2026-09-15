@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowRight, Building2, CheckCircle2, FileText, HardHat, Layers, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, Building2, CheckCircle2, FileText, HardHat, Layers, ShieldCheck, Sparkles, AlertTriangle } from 'lucide-react';
 import { USER_ROLES } from '../data/miningData';
+import { api } from '../services/api';
 
 const roles = [
   { key: 'geologist', label: 'Senior Geologist', detail: 'RI-II Dhanbad', icon: Sparkles },
@@ -13,17 +14,39 @@ export default function LoginPage({ onLogin }) {
   const [username, setUsername] = useState('sk.mahapatra');
   const [password, setPassword] = useState('••••••••••••');
   const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
   const handleRoleChange = (roleKey) => {
     setSelectedRoleKey(roleKey);
+    setLoginError('');
     const usernames = { geologist: 'sk.mahapatra', engineer: 'rajesh.sharma', reporting_officer: 'pooja.verma' };
     setUsername(usernames[roleKey]);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    setTimeout(() => onLogin(USER_ROLES[selectedRoleKey]), 600);
+    setLoginError('');
+
+    try {
+      const response = await api.login({
+        username,
+        password,
+        role_key: selectedRoleKey,
+      });
+
+      const user = response.user || USER_ROLES[selectedRoleKey];
+      onLogin(user);
+    } catch (err) {
+      // Fallback to local USER_ROLES data if API is unreachable (offline/dev mode)
+      if (!err.status) {
+        console.warn('API unreachable, falling back to local user data:', err.message);
+        onLogin(USER_ROLES[selectedRoleKey]);
+      } else {
+        setLoginError(err.message || 'Login failed. Please try again.');
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
@@ -64,6 +87,25 @@ export default function LoginPage({ onLogin }) {
               <span className="login-selected-copy"><strong>{USER_ROLES[selectedRoleKey].name}</strong><span>{USER_ROLES[selectedRoleKey].roleTitle}</span></span>
               <CheckCircle2 size={18} className="text-success" />
             </div>
+
+            {loginError && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 14px',
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '8px',
+                fontSize: '0.82rem',
+                color: '#991b1b',
+                marginBottom: '12px',
+                fontWeight: 600
+              }}>
+                <AlertTriangle size={16} />
+                <span>{loginError}</span>
+              </div>
+            )}
 
             <div className="form-group">
               <label className="form-label" htmlFor="login-username">NIC / Coal India username or email</label>

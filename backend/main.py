@@ -316,6 +316,28 @@ COALFIELDS_DB: List[Dict[str, Any]] = [
                     "waterTableDepthM": 45.1,
                     "porePressureKpa": 98
                 }
+            },
+            {
+                "id": "mine-moonidih",
+                "name": "Moonidih Underground Project",
+                "type": "Underground (UG)",
+                "coordinates": [23.738, 86.353],
+                "riskLevel": "Low",
+                "riskReason": "Longwall face strata pressure within permissible DGMS bounds",
+                "fos": 1.85,
+                "seamTarget": "Seam XVI-Top (Coking)",
+                "depthM": 410,
+                "strippingRatio": "N/A (Longwall)",
+                "gasGiddiness": "Degree-III (Gassy)",
+                "status": "Fully Operational",
+                "benchAngle": "N/A",
+                "recentReportId": "REP-2024-0912",
+                "sensorTelemetry": {
+                    "vibrationMmSec": 0.6,
+                    "tiltDegree": 0.05,
+                    "waterTableDepthM": 82.0,
+                    "porePressureKpa": 65
+                }
             }
         ],
         "boreholes": [
@@ -331,6 +353,19 @@ COALFIELDS_DB: List[Dict[str, Any]] = [
                 "ashContent": "18.4%",
                 "moisture": "1.2%",
                 "rmrRating": "68 (Class II - Good Roof)"
+            },
+            {
+                "id": "BH-JH-109",
+                "name": "Borehole BH-JH-109 (Fault Zone)",
+                "coordinates": [23.782, 86.435],
+                "depth": 420,
+                "drilledDate": "2024-03-04",
+                "seamsEncountered": 4,
+                "topSeam": "Seam X-Bottom (3.1m)",
+                "gcvKcal": 6420,
+                "ashContent": "22.1%",
+                "moisture": "1.6%",
+                "rmrRating": "44 (Class IV - Poor Strata)"
             }
         ]
     },
@@ -347,6 +382,28 @@ COALFIELDS_DB: List[Dict[str, Any]] = [
         "reservesMT": "28,100 MT",
         "riskSummary": "High Water Inrush and Old Strata Waterlogged Workings in Sripur Sector",
         "mines": [
+            {
+                "id": "mine-sonepur-bazari",
+                "name": "Sonepur Bazari Opencast Project",
+                "type": "Opencast (OCP)",
+                "coordinates": [23.692, 87.218],
+                "riskLevel": "Low",
+                "riskReason": "High capacity dragline excavation with stable bench configuration",
+                "fos": 1.68,
+                "seamTarget": "Raniganj Measure Seams",
+                "depthM": 165,
+                "strippingRatio": "1:5.2",
+                "gasGiddiness": "Degree-I",
+                "status": "Optimal Production",
+                "benchAngle": "36°",
+                "recentReportId": "REP-2024-0650",
+                "sensorTelemetry": {
+                    "vibrationMmSec": 1.1,
+                    "tiltDegree": 0.12,
+                    "waterTableDepthM": 29.5,
+                    "porePressureKpa": 72
+                }
+            },
             {
                 "id": "mine-chinakuri",
                 "name": "Chinakuri Mine No. 1 & 2",
@@ -383,6 +440,132 @@ COALFIELDS_DB: List[Dict[str, Any]] = [
                 "ashContent": "14.8%",
                 "moisture": "2.4%",
                 "rmrRating": "72 (Class II - Very Good)"
+            }
+        ]
+    },
+    {
+        "id": "cf-singrauli",
+        "name": "Singrauli Coalfield",
+        "subsidiary": "NCL",
+        "state": "Madhya Pradesh & UP",
+        "center": [24.12, 82.68],
+        "zoom": 12,
+        "totalMines": 11,
+        "activePits": 10,
+        "primeSeams": "Purewa (Bottom & Top), Turra Seam (Giant Open Pit Formations)",
+        "reservesMT": "16,200 MT",
+        "riskSummary": "Massive Overburden Dump Stability Monitoring at Jayant & Nigahi",
+        "mines": [
+            {
+                "id": "mine-jayant",
+                "name": "Jayant Mega Opencast Project",
+                "type": "Opencast (OCP)",
+                "coordinates": [24.118, 82.635],
+                "riskLevel": "Medium",
+                "riskReason": "Overburden dump height exceeds 120m; Continuous radar displacement monitoring",
+                "fos": 1.35,
+                "seamTarget": "Purewa & Turra Seams (18m thick)",
+                "depthM": 190,
+                "strippingRatio": "1:2.8",
+                "gasGiddiness": "Degree-I",
+                "status": "Operational",
+                "benchAngle": "40°",
+                "recentReportId": "REP-2024-0810",
+                "sensorTelemetry": {
+                    "vibrationMmSec": 2.1,
+                    "tiltDegree": 0.52,
+                    "waterTableDepthM": 52.0,
+                    "porePressureKpa": 115
+                }
+            },
+            {
+                "id": "mine-nigahi",
+                "name": "Nigahi Open Cast Project",
+                "type": "Opencast (OCP)",
+                "coordinates": [24.135, 82.695],
+                "riskLevel": "Low",
+                "riskReason": "Excellent bench stabilization and automated slope laser telemetry",
+                "fos": 1.72,
+                "seamTarget": "Turra Seam",
+                "depthM": 175,
+                "strippingRatio": "1:2.4",
+                "gasGiddiness": "Degree-I",
+                "status": "Optimal Production",
+                "benchAngle": "35°",
+                "recentReportId": "REP-2024-0422",
+                "sensorTelemetry": {
+                    "vibrationMmSec": 1.2,
+                    "tiltDegree": 0.15,
+                    "waterTableDepthM": 48.0,
+                    "porePressureKpa": 68
+                }
+            }
+        ],
+        "boreholes": [
+            {
+                "id": "BH-SG-012",
+                "name": "Borehole BH-SG-012 (Turra Seam Probe)",
+                "coordinates": [24.125, 82.665],
+                "depth": 260,
+                "drilledDate": "2024-02-09",
+                "seamsEncountered": 3,
+                "topSeam": "Turra (16.2m)",
+                "gcvKcal": 4850,
+                "ashContent": "28.6%",
+                "moisture": "7.8%",
+                "rmrRating": "62 (Class II - Fair/Good)"
+            }
+        ]
+    },
+    {
+        "id": "cf-korba",
+        "name": "Korba Coalfield",
+        "subsidiary": "SECL",
+        "state": "Chhattisgarh",
+        "center": [22.35, 82.68],
+        "zoom": 12,
+        "totalMines": 19,
+        "activePits": 12,
+        "primeSeams": "Gevra, Kusmunda, Dipka Mega-Deposits",
+        "reservesMT": "22,800 MT",
+        "riskSummary": "High Dust Generation & Monsoon Water Sump Overflows at Gevra OC",
+        "mines": [
+            {
+                "id": "mine-gevra",
+                "name": "Gevra Mega Opencast Project (World's Largest Coal Mine)",
+                "type": "Opencast (OCP)",
+                "coordinates": [22.348, 82.592],
+                "riskLevel": "Low",
+                "riskReason": "State-of-the-art continuous surface miners and eco-restoration benches",
+                "fos": 1.65,
+                "seamTarget": "Upper Kusmunda & Lower Kusmunda",
+                "depthM": 180,
+                "strippingRatio": "1:1.6",
+                "gasGiddiness": "Degree-I",
+                "status": "Peak Capacity (70 MTPA)",
+                "benchAngle": "36°",
+                "recentReportId": "REP-2024-0995",
+                "sensorTelemetry": {
+                    "vibrationMmSec": 1.4,
+                    "tiltDegree": 0.18,
+                    "waterTableDepthM": 35.0,
+                    "porePressureKpa": 82
+                }
+            }
+        ],
+        "boreholes": [
+            {
+                "id": "BH-KB-301",
+                "name": "Borehole BH-KB-301 (Gevra Extension)",
+                "coordinates": [22.362, 82.580],
+                "depth": 210,
+                "drilledDate": "2024-03-12",
+                "seamsEncountered": 2,
+                "topSeam": "Kusmunda Composite (28.4m)",
+                "gcvKcal": 3900,
+                "ashContent": "38.2%",
+                "moisture": "9.2%",
+                "rmrRating": "58 (Class III - Fair)"
             }
         ]
     }
@@ -436,6 +619,95 @@ REPORTS_DB: List[Dict[str, Any]] = [
         }
     },
     {
+        "id": "REP-2024-0744",
+        "title": "Lithological Core Logging & Seam Correlation Report for Kusunda North Extension",
+        "subsidiary": "BCCL",
+        "coalfield": "Jharia Coalfield",
+        "category": "Borehole Lithology",
+        "fileType": "PDF",
+        "fileSize": "22.8 MB",
+        "date": "2024-02-28",
+        "author": "A. K. Sengupta (Exploration Wing, CMPDI)",
+        "status": "AI Analyzed & Certified",
+        "riskLevel": "Medium",
+        "riskScore": 56,
+        "executiveSummary": "Exploration drilling of Boreholes BH-KS-101 through BH-KS-108 confirmed the persistence of Seams V, VI, and VII in the Northern extension of Kusunda block. Cumulative mineable coal thickness is estimated at 18.4m with an average stripping ratio of 1:3.6. A normal fault F-14 with 12m throw was mapped in the North-East sector, displacing Seam VII upwards.",
+        "keyFindings": [
+            "Total geological coal reserves estimated at 42.6 MT in the 2.4 sq.km surveyed block.",
+            "Seam VII exhibits superior coking characteristics with Crucible Swelling Number (CSN) 5.5.",
+            "Fault F-14 trending NW-SE mapped accurately using high-resolution seismic refraction survey.",
+            "No major aquifer intersection found above 180m depth."
+        ],
+        "keywords": [
+            "Borehole Coring", "Seam V/VI/VII", "Fault F-14", "Coking Coal",
+            "Stripping Ratio 1:3.6", "Kusunda Block", "CMPDI Exploration"
+        ],
+        "stratigraphy": [
+            { "layer": "Alluvial Cover", "depthFrom": 0, "depthTo": 8, "lithology": "Silt & Sandy Clay", "rmr": 40, "color": "#f59e0b" },
+            { "layer": "Fine Sandstone Bed", "depthFrom": 8, "depthTo": 45, "lithology": "Fine Sandstone", "rmr": 68, "color": "#94a3b8" },
+            { "layer": "Coal Seam VII", "depthFrom": 45, "depthTo": 52.4, "lithology": "Prime Coking Coal", "rmr": 70, "color": "#1e293b" },
+            { "layer": "Shaly Sandstone", "depthFrom": 52.4, "depthTo": 98, "lithology": "Laminated Sandstone", "rmr": 64, "color": "#64748b" },
+            { "layer": "Coal Seam V/VI Combined", "depthFrom": 98, "depthTo": 109, "lithology": "Coking Coal", "rmr": 66, "color": "#0f172a" }
+        ],
+        "coreLabMetrics": {
+            "ashContent": "19.8%",
+            "moisture": "1.6%",
+            "volatileMatter": "24.5%",
+            "fixedCarbon": "54.1%",
+            "gcv": "6,620 kcal/kg",
+            "cokingIndex": "Grade Steel-II"
+        },
+        "dgmsCompliance": {
+            "standard": "CMPDI Geo-Exploration Guidelines 2020",
+            "status": "Fully Compliant",
+            "deadline": "Annual Review"
+        }
+    },
+    {
+        "id": "REP-2024-0912",
+        "title": "Strata Monitoring & Longwall Face Geomechanics Report - Moonidih Seam XVI",
+        "subsidiary": "BCCL",
+        "coalfield": "Jharia Coalfield",
+        "category": "Underground Geomechanics",
+        "fileType": "DOCX",
+        "fileSize": "8.6 MB",
+        "date": "2024-03-02",
+        "author": "Prof. N. K. Roy (Advisor Strata Control, CMPDI)",
+        "status": "AI Analyzed & Certified",
+        "riskLevel": "Low",
+        "riskScore": 22,
+        "executiveSummary": "Continuous monitoring of hydraulic powered roof supports (PRS) at Moonidih Longwall Panel L-4 indicates periodic main weighting interval of 32m to 38m. Leg pressure sensors remained below 380 bar (rated capacity 450 bar). Degasification drainage holes reduced methane concentration in the return airway to 0.42%, well below the statutory limit of 0.75%.",
+        "keyFindings": [
+            "Powered Support Leg Pressures steady with average load 340 bar during normal shear cycles.",
+            "Main roof periodic caving occurring smoothly without sudden air-blast hazard.",
+            "Pre-drainage cross-measure boreholes achieving 68% methane extraction efficiency.",
+            "Roof convergence measured at gate roads averaged 4.2mm per 10m advance."
+        ],
+        "keywords": [
+            "Moonidih Longwall", "Powered Roof Support", "Strata Control",
+            "Methane Pre-drainage", "Seam XVI", "DGMS CMR 2017"
+        ],
+        "stratigraphy": [
+            { "layer": "Massive Sandstone Main Roof", "depthFrom": 360, "depthTo": 398, "lithology": "Coarse Massive Sandstone (UCS 82 MPa)", "rmr": 82, "color": "#94a3b8" },
+            { "layer": "Immediate Roof Shale", "depthFrom": 398, "depthTo": 402, "lithology": "Laminated Mudstone", "rmr": 52, "color": "#64748b" },
+            { "layer": "Coal Seam XVI-Top", "depthFrom": 402, "depthTo": 406.8, "lithology": "High Grade Coking Coal", "rmr": 75, "color": "#0f172a" },
+            { "layer": "Strong Sandstone Floor", "depthFrom": 406.8, "depthTo": 420, "lithology": "Hard Quartzitic Sandstone", "rmr": 85, "color": "#cbd5e1" }
+        ],
+        "coreLabMetrics": {
+            "ashContent": "15.4%",
+            "moisture": "1.1%",
+            "volatileMatter": "28.2%",
+            "fixedCarbon": "55.3%",
+            "gcv": "7,120 kcal/kg",
+            "cokingIndex": "Prime Coking Coal (Washed)"
+        },
+        "dgmsCompliance": {
+            "standard": "Coal Mines Regulations (CMR) 2017 - Regulation 123",
+            "status": "Fully Compliant",
+            "deadline": "Continuous Audit"
+        }
+    },
+    {
         "id": "REP-2024-0518",
         "title": "Deep Seam Degasification & Coalbed Gas Reservoir Study - Chinakuri Colliery",
         "subsidiary": "ECL",
@@ -478,6 +750,93 @@ REPORTS_DB: List[Dict[str, Any]] = [
             "status": "Degasification Upgrade Required",
             "deadline": "30 Days"
         }
+    },
+    {
+        "id": "REP-2024-0810",
+        "title": "High-Capacity Overburden Dump Slope Radar Telemetry - Jayant OCP",
+        "subsidiary": "NCL",
+        "coalfield": "Singrauli Coalfield",
+        "category": "Slope Stability & Geotechnical",
+        "fileType": "EXCEL / PDF",
+        "fileSize": "16.5 MB",
+        "date": "2024-03-08",
+        "author": "Geotechnical Engineering Group, NCL",
+        "status": "AI Analyzed & Certified",
+        "riskLevel": "Medium",
+        "riskScore": 52,
+        "executiveSummary": "GroundProbe Slope Stability Radar (SSR) monitoring of the 135m high Southern Waste Dump at Jayant Opencast Project detected minor creep displacement (1.2mm/day) in the middle tier terrace. 3D limit equilibrium back-analysis computed a Global Safety Factor of 1.35 under static conditions, reducing to 1.15 under pseudo-dynamic blasting vibration.",
+        "keyFindings": [
+            "Dump terrace height recommended to be limited to 30m maximum per bench with 25m berm widths.",
+            "Installed toe-drainage gallery effectively lowered phreatic surface inside the dump mass by 14m.",
+            "Recommended toe rock-bund reinforcement using massive sandstone boulder rip-rap.",
+            "Real-time automated alarm trigger established at 5.0 mm/day velocity threshold."
+        ],
+        "keywords": [
+            "Jayant OCP", "Overburden Dump", "Slope Stability Radar (SSR)",
+            "Factor of Safety (1.35)", "Berm Design", "NCL Singrauli"
+        ],
+        "stratigraphy": [
+            { "layer": "Loose Overburden Dump Material", "depthFrom": 0, "depthTo": 135, "lithology": "Compacted Sandstone & Shale Debris", "rmr": 42, "color": "#d97706" },
+            { "layer": "Original Basal Bedrock", "depthFrom": 135, "depthTo": 180, "lithology": "Firm Sandstone Foundation", "rmr": 75, "color": "#94a3b8" }
+        ],
+        "coreLabMetrics": {
+            "ashContent": "N/A (Overburden)",
+            "moisture": "6.4%",
+            "volatileMatter": "N/A",
+            "fixedCarbon": "N/A",
+            "gcv": "N/A",
+            "cokingIndex": "Overburden Strata"
+        },
+        "dgmsCompliance": {
+            "standard": "DGMS Circular 02 of 2020 (Dump Safety Guidelines)",
+            "status": "Fully Compliant with Radar Monitoring",
+            "deadline": "Quarterly Re-assessment"
+        }
+    },
+    {
+        "id": "REP-2024-0995",
+        "title": "Gevra Expansion 70 MTPA Environmental & Strata Clearance Feasibility",
+        "subsidiary": "SECL",
+        "coalfield": "Korba Coalfield",
+        "category": "Environmental & Mine Planning",
+        "fileType": "PDF",
+        "fileSize": "31.4 MB",
+        "date": "2024-03-10",
+        "author": "Mine Planning Dept, CMPDI RI-V (Bilaspur)",
+        "status": "AI Analyzed & Certified",
+        "riskLevel": "Low",
+        "riskScore": 18,
+        "executiveSummary": "Comprehensive geological evaluation of the Kusmunda Upper and Lower seams for the Gevra Mega Expansion to 70 MTPA capacity. Clean stripping ratio of 1:1.6 ensures low unit extraction cost. Hydrogeological modeling indicates manageable cone of water depression within 1.2km radius with extensive rain-water harvesting sumps planned in decoaled voids.",
+        "keyFindings": [
+            "Proved mineable reserves exceed 680 MT in the expanded lease boundary.",
+            "Surface miner deployment minimizes blasting vibration impact on neighboring villages.",
+            "Water management system recirculates 84% of mine pit discharge for dust suppression and washeries.",
+            "Carbon sequestration green-belt buffer designed covering 420 hectares."
+        ],
+        "keywords": [
+            "Gevra 70 MTPA", "Kusmunda Seam", "SECL Korba", "Stripping Ratio 1:1.6",
+            "Surface Miner", "Hydrogeology", "CMPDI Mine Plan"
+        ],
+        "stratigraphy": [
+            { "layer": "Alluvium & Sandy Soil", "depthFrom": 0, "depthTo": 12, "lithology": "Loose Soil & Gravel", "rmr": 45, "color": "#f59e0b" },
+            { "layer": "Upper Sandstone Bed", "depthFrom": 12, "depthTo": 52, "lithology": "Coarse Sandstone", "rmr": 72, "color": "#94a3b8" },
+            { "layer": "Upper Kusmunda Seam", "depthFrom": 52, "depthTo": 78.4, "lithology": "Power Grade Coal (G-11)", "rmr": 62, "color": "#1e293b" },
+            { "layer": "Parting Sandstone", "depthFrom": 78.4, "depthTo": 96, "lithology": "Compact Siltstone", "rmr": 68, "color": "#64748b" },
+            { "layer": "Lower Kusmunda Seam (Thick)", "depthFrom": 96, "depthTo": 138, "lithology": "Non-Coking Coal (G-12)", "rmr": 64, "color": "#0f172a" }
+        ],
+        "coreLabMetrics": {
+            "ashContent": "37.8%",
+            "moisture": "8.4%",
+            "volatileMatter": "22.1%",
+            "fixedCarbon": "31.7%",
+            "gcv": "3,950 kcal/kg",
+            "cokingIndex": "Power Utility Grade G-11/G-12"
+        },
+        "dgmsCompliance": {
+            "standard": "Ministry of Environment, Forest & Climate Change (MoEFCC) EC Terms",
+            "status": "Approved & Certified",
+            "deadline": "Bi-annual Reporting"
+        }
     }
 ]
 
@@ -497,7 +856,25 @@ MINEGPT_KNOWLEDGE_BASE: List[Dict[str, Any]] = [
         "reply": "Currently, the CMPDI AI Engine has identified **3 Critical High-Risk Locations** requiring immediate intervention:\n\n| Coalfield | Mine / Block | Hazard Type | Severity Metric | Recommended Action |\n| :--- | :--- | :--- | :--- | :--- |\n| **Jharia (BCCL)** | **Joyrampur Colliery (Block IV OCP)** | Highwall Slope Instability | FOS = **1.18** (Critical) | Urgent bench flattening & horizontal dewatering |\n| **Raniganj (ECL)** | **Chinakuri Underground No. 1** | In-situ Methane Gas & Strata Pressure | Gas Content = **14.8 m³/t** | Vacuum pre-drainage degasification drilling |\n| **Singrauli (NCL)** | **Jayant Overburden Dump Tier 3** | Dump Slope Creep Displacement | Velocity = **1.2 mm/day** | Rock-bund reinforcement & berm widening |\n\n*Note: All alerts have been automatically compiled into DGMS Compliance Notice formats.*",
         "sources": [
             { "id": "DGMS-ALERTS-2024", "name": "CMPDI Live Sensor Telemetry Network", "pages": "Real-time Feeds", "confidence": "99.8%" },
-            { "id": "REP-2024-0891", "name": "Joyrampur Slope Stability Assessment", "pages": "pp. 18", "confidence": "98.1%" }
+            { "id": "REP-2024-0891", "name": "Joyrampur Slope Stability Assessment", "pages": "pp. 18", "confidence": "98.1%" },
+            { "id": "REP-2024-0518", "name": "Chinakuri Degasification Study", "pages": "pp. 6-12", "confidence": "97.4%" }
+        ]
+    },
+    {
+        "query": "Compare two reports",
+        "responseTitle": "Comparative Geological Analysis: Jharia Block-IV vs Kusunda Extension",
+        "reply": "Here is the AI comparative synthesis between **REP-2024-0891 (Joyrampur OCP)** and **REP-2024-0744 (Kusunda Extension)**:\n\n| Geological Parameter | Joyrampur Block-IV (BCCL) | Kusunda Extension (BCCL) | Variance / Remarks |\n| :--- | :--- | :--- | :--- |\n| **Target Coal Seams** | Seam IX/X (Prime Coking) | Seam V/VI/VII (Semi/Prime Coking) | Kusunda has thicker combined seam |\n| **Average Seam Thickness**| 7.5 meters | 18.4 meters (cumulative) | +145% coal volume in Kusunda |\n| **Stripping Ratio** | **1 : 4.8** (Higher Overburden) | **1 : 3.6** (Economical) | Kusunda yields lower extraction cost |\n| **Calorific Value (GCV)** | **6,840 kcal/kg** | 6,620 kcal/kg | Joyrampur has higher thermal/coke quality |\n| **Ash Content (%)** | 18.2% (Grade Steel-I) | 19.8% (Grade Steel-II) | Joyrampur requires less washing |\n| **Geotechnical Risk** | **High (FOS 1.18)** | **Medium (FOS 1.42)** | Joyrampur requires urgent slope remediation |\n| **Structural Complexity** | Planar slickenside shale layer | Normal Fault F-14 (12m throw) | Kusunda has structural tectonic offset |",
+        "sources": [
+            { "id": "REP-2024-0891", "name": "Joyrampur Block-IV Geotechnical Audit", "pages": "pp. 8-16", "confidence": "98.9%" },
+            { "id": "REP-2024-0744", "name": "Kusunda Lithological & Seam Correlation", "pages": "pp. 21-29", "confidence": "98.7%" }
+        ]
+    },
+    {
+        "query": "List recent geological findings",
+        "responseTitle": "Recent Geological & Exploration Discoveries (CMPDI 2024)",
+        "reply": "Summary of key exploration and geological milestones synthesized across recent subsidiary reports:\n\n1. **Gevra Mega Seam Extension (SECL - Korba)**:\n   - Confirmed **680 MT** proved mineable reserves in Kusunda Upper & Lower seams with a favorable stripping ratio of **1:1.6**.\n2. **Deep Coking Reserves in Jharia (BCCL - Moonidih)**:\n   - Continuous Longwall shear mining at 410m depth proved the structural continuity of Seam XVI with high GCV (**7,120 kcal/kg**) and low ash (**15.4%**).\n3. **Highwall Dewatering Protocols (BCCL - Joyrampur)**:\n   - Sub-horizontal drainage drill patterns mapped to relieve pore pressure along carbonaceous shale boundaries, elevating FOS back above **1.35**.\n4. **Coalbed Methane Potential in Raniganj (ECL - Chinakuri)**:\n   - Dishergarh Seam confirmed as a Tier-1 methane reservoir (**14.8 m³/tonne**), supporting commercial CBM extraction alongside underground mining safety.",
+        "sources": [
+            { "id": "CMPDI-ANNUAL-2024", "name": "CMPDI Central Geological Repository", "pages": "Sections 4.1 - 4.6", "confidence": "99.0%" }
         ]
     }
 ]

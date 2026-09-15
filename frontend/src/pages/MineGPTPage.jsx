@@ -11,8 +11,8 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 
-export default function MineGPTPage() {
-  const [query, setQuery] = useState('');
+export default function MineGPTPage({ initialPrompt, onSelectReport }) {
+  const [query, setQuery] = useState(initialPrompt || '');
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [recentReports, setRecentReports] = useState([]);
@@ -20,6 +20,16 @@ export default function MineGPTPage() {
   useEffect(() => {
     api.getReports().then(reports => setRecentReports(reports.slice(0, 3)));
   }, []);
+
+  useEffect(() => {
+    if (initialPrompt) {
+      setQuery(initialPrompt);
+      const timer = setTimeout(() => {
+        handleSubmit({ preventDefault: () => {} });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [initialPrompt]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

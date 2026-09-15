@@ -150,7 +150,6 @@ export default function App() {
 
           {currentPage === 'reports' && (
             <ReportsPage 
-              reports={reports}
               onSelectReport={(report) => setSelectedReport(report)}
               onOpenUpload={() => setIsUploadOpen(true)}
               onOpenMineGPT={handleOpenMineGPT}

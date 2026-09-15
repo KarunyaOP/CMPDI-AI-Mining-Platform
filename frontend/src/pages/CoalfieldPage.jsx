@@ -26,6 +26,7 @@ import {
   Filter
 } from 'lucide-react';
 import { api } from '../services/api';
+import { GEOLOGICAL_REPORTS } from '../data/miningData';
 
 export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
   const [coalfields, setCoalfields] = useState([]);
@@ -316,11 +317,11 @@ export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
                 value={selectedCoalfieldId}
                 onChange={(e) => {
                   setSelectedCoalfieldId(e.target.value);
-                  const cf = COALFIELDS_DATA.find(c => c.id === e.target.value);
+                  const cf = coalfields.find(c => c.id === e.target.value);
                   if (cf && cf.mines.length > 0) setSelectedObject(cf.mines[0]);
                 }}
               >
-                {COALFIELDS_DATA.map((cf) => (
+                {coalfields.map((cf) => (
                   <option key={cf.id} value={cf.id}>
                     {cf.name} ({cf.subsidiary})
                   </option>
@@ -461,7 +462,7 @@ export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
               value={selectedCoalfieldId}
               onChange={(e) => {
                 setSelectedCoalfieldId(e.target.value);
-                const cf = COALFIELDS_DATA.find(c => c.id === e.target.value);
+                const cf = coalfields.find(c => c.id === e.target.value);
                 if (cf && cf.mines.length > 0) setSelectedObject(cf.mines[0]);
               }}
               style={{
@@ -476,7 +477,7 @@ export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
                 cursor: 'pointer'
               }}
             >
-              {COALFIELDS_DATA.map((cf) => (
+              {coalfields.map((cf) => (
                 <option key={cf.id} value={cf.id} style={{ background: '#0f172a', color: '#ffffff' }}>
                   📍 {cf.name}
                 </option>

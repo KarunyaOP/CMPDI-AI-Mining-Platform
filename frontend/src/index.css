@@ -733,6 +733,149 @@ button:active, .btn:active {
   background-color: var(--primary-accent);
 }
 
+/* ==========================================================================
+   2025/2026 Enterprise Design Standard Enhancements
+   ========================================================================== */
+
+/* 1. Gradient Accent Highlights on Primary Cards & Panels */
+.content-card,
+.role-metric-card,
+.role-panel,
+.recent-report-card,
+.kpi-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.content-card::before,
+.role-panel::before,
+.recent-report-card::before,
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-accent), #38bdf8, var(--mining-amber));
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.role-metric-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: auto;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--primary-accent), #38bdf8);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+/* 2. Refined Pill Tabs */
+.pill-tabs-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+}
+
+.pill-tab {
+  min-height: 36px;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.pill-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.pill-tab.active {
+  background: #ffffff;
+  color: var(--primary-accent);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* 3. Sleek Micro-Badges */
+.micro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  backdrop-filter: blur(4px);
+}
+
+.micro-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.micro-badge-blue {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.micro-badge-green {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+.micro-badge-amber {
+  background: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+.micro-badge-red {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.micro-badge-slate {
+  background: #f1f5f9;
+  color: #475569;
+  border-color: var(--border-color);
+}
+
+/* 4. Subtle Focus Glows */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.content-card:focus-within,
+.kpi-card:focus-within,
+.role-metric-card:focus-within {
+  outline: none;
+  border-color: var(--primary-accent) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16), 0 2px 4px rgba(15, 23, 42, 0.04) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
