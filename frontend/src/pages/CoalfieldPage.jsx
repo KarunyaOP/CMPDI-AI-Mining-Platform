@@ -60,6 +60,12 @@ export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
         setSelectedObject(data[0].mines[0]);
       }
       setLoading(false);
+    }).catch(() => {
+      setCoalfields(COALFIELDS_DATA);
+      if (COALFIELDS_DATA.length > 0 && COALFIELDS_DATA[0].mines?.length > 0) {
+        setSelectedObject(COALFIELDS_DATA[0].mines[0]);
+      }
+      setLoading(false);
     });
   }, []);
 

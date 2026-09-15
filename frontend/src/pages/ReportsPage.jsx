@@ -15,6 +15,7 @@ import {
   Layers
 } from 'lucide-react';
 import { api } from '../services/api';
+import { GEOLOGICAL_REPORTS } from '../data/miningData';
 
 export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGPT }) {
   const [reports, setReports] = useState([]);
@@ -34,6 +35,9 @@ export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGP
     
     api.getReports(params).then(data => {
       setReports(data);
+      setLoading(false);
+    }).catch(() => {
+      setReports(GEOLOGICAL_REPORTS);
       setLoading(false);
     });
   }, [searchTerm, selectedCategory, selectedSubsidiaryFilter, selectedRiskFilter]);
