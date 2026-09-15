@@ -26,7 +26,7 @@ import {
   Filter
 } from 'lucide-react';
 import { api } from '../services/api';
-import { GEOLOGICAL_REPORTS } from '../data/miningData';
+import { COALFIELDS_DATA, GEOLOGICAL_REPORTS } from '../data/miningData';
 
 export default function CoalfieldPage({ onSelectReport, onOpenMineGPT }) {
   const [coalfields, setCoalfields] = useState([]);
