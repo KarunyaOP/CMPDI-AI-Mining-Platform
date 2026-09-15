@@ -13,3 +13,5 @@ backend/data/
 .opencode/
 .specify/
 opencode.json
+.env
+backend/.env
