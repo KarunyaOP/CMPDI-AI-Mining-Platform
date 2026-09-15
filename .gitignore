@@ -7,3 +7,4 @@ backend/venv/
 **/__pycache__/
 backend/uploads/
 backend/data/
+opencode.json
