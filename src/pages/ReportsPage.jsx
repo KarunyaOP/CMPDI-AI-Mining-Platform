@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FileSpreadsheet, 
   Search, 
@@ -14,13 +14,29 @@ import {
   Calendar,
   Layers
 } from 'lucide-react';
-import { SUBSIDIARIES } from '../data/miningData';
+import { api } from '../services/api';
 
-export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload, onOpenMineGPT }) {
+export default function ReportsPage({ onSelectReport, onOpenUpload, onOpenMineGPT }) {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedSubsidiaryFilter, setSelectedSubsidiaryFilter] = useState('ALL');
   const [selectedRiskFilter, setSelectedRiskFilter] = useState('ALL');
+
+  useEffect(() => {
+    const params = {
+      ...(selectedCategory !== 'ALL' && { category: selectedCategory }),
+      ...(selectedSubsidiaryFilter !== 'ALL' && { subsidiary: selectedSubsidiaryFilter }),
+      ...(selectedRiskFilter !== 'ALL' && { risk_level: selectedRiskFilter }),
+      ...(searchTerm && { search: searchTerm })
+    };
+    
+    api.getReports(params).then(data => {
+      setReports(data);
+      setLoading(false);
+    });
+  }, [searchTerm, selectedCategory, selectedSubsidiaryFilter, selectedRiskFilter]);
 
   const categories = [
     'ALL',
@@ -30,20 +46,6 @@ export default function ReportsPage({ reports = [], onSelectReport, onOpenUpload
     'Gas Reservoir & Ventilation',
     'Environmental & Mine Planning'
   ];
-
-  const filteredReports = reports.filter((report) => {
-    const matchesSearch = 
-      report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.coalfield.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.keywords.some(k => k.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    const matchesCategory = selectedCategory === 'ALL' || report.category === selectedCategory;
-    const matchesSubsidiary = selectedSubsidiaryFilter === 'ALL' || report.subsidiary === selectedSubsidiaryFilter;
-    const matchesRisk = selectedRiskFilter === 'ALL' || report.riskLevel === selectedRiskFilter;
-
-    return matchesSearch && matchesCategory && matchesSubsidiary && matchesRisk;
-  });
 
   return (
     <div className="page-wrapper">

@@ -1,4 +1,9 @@
-node_modules/ 
-dist/ 
+node_modules/
+dist/
 .opencode/
 .specify/
+backend/.venv/
+backend/venv/
+**/__pycache__/
+backend/uploads/
+backend/data/
